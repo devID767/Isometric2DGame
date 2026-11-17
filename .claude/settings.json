@@ -1,0 +1,32 @@
+{
+  "includeCoAuthoredBy": false,
+  "permissions": {
+    "deny": [
+      "Edit(/Assets/**)",
+      "Write(/Assets/**)",
+      "Edit(/ProjectSettings/**)",
+      "Write(/ProjectSettings/**)",
+      "Edit(/Packages/**)",
+      "Write(/Packages/**)",
+      "Edit(/.claude/**)",
+      "Write(/.claude/**)",
+      "Edit(~/.claude/settings*.json)",
+      "Write(~/.claude/settings*.json)",
+      "Bash(git push:*)",
+      "Bash(gh pr create:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard.py\""
+          }
+        ]
+      }
+    ]
+  }
+}
