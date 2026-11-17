@@ -1,0 +1,19 @@
+# Line endings: normalize text to LF
+* text=auto eol=lf
+*.cs text diff=csharp
+
+# Binary files: never touch line endings, never diff
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.psd binary
+*.gif binary
+*.tga binary
+*.aseprite binary
+*.wav binary
+*.mp3 binary
+*.ogg binary
+*.fbx binary
+*.ttf binary
+*.otf binary
+*.zip binary
