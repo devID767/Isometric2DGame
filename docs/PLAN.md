@@ -49,9 +49,9 @@ Estimates are focused work hours, breaks not included.
 **Task 3 - Enemy AI**
 - State machine: Idle, Patrol, Chase, Attack
 - Player detection with LayerMasks and line of sight
-- Random patrol points
-- Health component shared with the player
-- State shown by colour, debug gizmos in the editor
+- Random patrol area and search state
+- Health component shared with the player (moved to Task 4, where damage is needed)
+- State shown by animation instead of colour, debug gizmos in the editor
 
 **Task 4 - Combat**
 - Melee attack on Space / left mouse button
@@ -92,3 +92,10 @@ Added as they are made.
 - **Movement logic in plain C# classes.** `CharacterMotor` and `PlayerInputReader` are not MonoBehaviours. `Player` creates them and forwards Unity callbacks (Humble Object). Enemies will reuse the same motor.
 - **Camera: Cinemachine 3 follow camera, no custom script.** Rigidbody interpolation is on to avoid jitter.
 - **Animation states are switched from code, not by Animator transitions.** `CharacterAnimator` picks the state from action and facing (`Walk_Side`, `Idle_Up`, ...) and calls `Animator.Play` only when it changes. Attack, hurt and death in Task 4 need exact timing, which is easier to follow in code than in a transition graph. Enemies will use the same state names with their own clips through an Animator Override Controller.
+- **Enemy state machine with a transition table** (18.11). States implement `Enter`/`Exit` and optionally `Tick`/`FixedTick`. They do not switch states themselves: `StateMachine` stores `(from, to, condition)` transitions and checks them before ticking the current state, first match wins. All enemy behaviour is readable in one method, and a state never changes the state while it is still running its own `Enter` or `Exit`.
+- **Player detection by query, not by trigger collider.** `PlayerSensor` runs `OverlapCircle` with the Player mask at the lose radius and a `Linecast` with the Obstacles mask, once per frame in `Refresh()`. States and transitions read the cached values. Without a target the distance is infinity, so range checks fail without extra null checks.
+- **Hysteresis for transitions.** Lose radius is bigger than detect radius, and attack ends at attack range plus a margin. Without it the enemy flickers between states when the player stands on a border.
+- **"Dynamic patrol routes": random area route plus search state.** I read "change or randomize" as two things. Randomize: `AreaPatrolRoute` picks a random point in a circle and checks it with `OverlapCircle` (not inside an obstacle) and `CircleCast` (the body can walk there in a straight line). Change: after losing the player the enemy goes to the last seen position and looks around before returning to its route. Fixed waypoints stay available as `WaypointPatrolRoute`, which returns to the nearest point after a chase.
+- **Patrol route as a strategy.** `PatrolRoute` is an abstract MonoBehaviour with `TryGetNextPoint`. The patrol state walks to the point and reports arrival, the route decides which point. A MonoBehaviour and not an interface, so the route can be assigned in the Inspector.
+- **States drive the animation.** `CharacterAnimator` no longer decides the action from velocity on its own. It has `Face`, `PlayAnimation` and `PlayLocomotion`, and each state calls what it needs. Attack and look-around need an explicit action and facing that velocity cannot give.
+- **Enemy reuses the player's motor and animator.** Same `CharacterMotor` with its own `EnemyMoveConfig`, same Animator Controller through an Animator Override Controller with skeleton clips.
