@@ -7458,7 +7458,7 @@ GameObject:
   - component: {fileID: 52521315}
   - component: {fileID: 52521318}
   - component: {fileID: 52521316}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9275,7 +9275,7 @@ GameObject:
   - component: {fileID: 1410615661}
   - component: {fileID: 1410615662}
   - component: {fileID: 1410615663}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9797,6 +9797,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1000000000000000023, guid: 0ff7474733fa43e59466b91e13f4b944, type: 3}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3777866833891413691, guid: 0ff7474733fa43e59466b91e13f4b944, type: 3}
+      propertyPath: _patrols
+      value: 
+      objectReference: {fileID: 1873560012}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9811,6 +9819,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1873560011}
+  - component: {fileID: 1873560012}
   m_Layer: 0
   m_Name: SkeletonPatrol
   m_TagString: Untagged
@@ -9835,6 +9844,21 @@ Transform:
   - {fileID: 1873560031}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1873560012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1873560010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61afa68a189d34dd287907f7d3d1d693, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Isometric2DGame.Environment.Patrols
+  _points:
+  - {fileID: 1873560021}
+  - {fileID: 1873560031}
 --- !u!1 &1873560020
 GameObject:
   m_ObjectHideFlags: 0
@@ -9907,7 +9931,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1909795113}
   - component: {fileID: 1909795114}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29511,8 +29535,8 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 912133493}
-  - {fileID: 52521314}
   - {fileID: 2045704800}
   - {fileID: 717737372}
   - {fileID: 1873560011}
+  - {fileID: 52521314}
   - {fileID: 1873560001}
