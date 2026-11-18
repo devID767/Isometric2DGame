@@ -17,9 +17,15 @@ namespace Isometric2DGame.Movement
             _config = config;
         }
 
-        public void SetMoveInput(Vector2 direction)
+        public void SetDirection(Vector2 direction)
         {
             _direction = direction;
+        }
+
+        public void Reset()
+        {
+            _direction = Vector2.zero;
+            _rb.linearVelocity = Vector2.zero;
         }
 
         public void FixedTick()

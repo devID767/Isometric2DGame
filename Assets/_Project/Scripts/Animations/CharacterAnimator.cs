@@ -28,6 +28,11 @@ namespace Isometric2DGame.Animations
             PlayAnimation();
         }
 
+        public void Reset()
+        {
+            _currentHash = 0;
+        }
+
         private void SelectAnimation(Vector2 velocity)
         {
             if (velocity.sqrMagnitude > Threshold)
