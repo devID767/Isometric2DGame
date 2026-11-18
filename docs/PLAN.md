@@ -28,7 +28,7 @@ Estimates are focused work hours, breaks not included.
 - Send the plan and repository link
 
 **Asset sourcing** (runs alongside Tasks 2-3, placeholders until it is done)
-- Free isometric 2D sprites close to the project style
+- Free 2D sprites close to the project style
 - License check, credits in README
 - Import settings and slicing
 
@@ -42,7 +42,7 @@ Estimates are focused work hours, breaks not included.
 - New Input System, Move action for WASD and arrow keys
 - Dynamic Rigidbody2D movement with configurable max speed and instant acceleration
 - Player collider
-- Isometric Tilemap with Y-sorting and test obstacles
+- 3/4 top-down Tilemap with Y-sorting and test obstacles
 - Cinemachine follow camera
 - Direction flip or walk animation
 
@@ -83,3 +83,12 @@ Estimates are focused work hours, breaks not included.
 ## Decisions
 
 Added as they are made.
+
+- **View: 3/4 top-down instead of a strict isometric grid** (17.11). I asked the team which one they expect, the answer was that either is fine. I chose 3/4 because Nanokings uses it and because all art can then come from one author with the same pixel density and palette.
+- **W moves the player up the screen.** With a 3/4 view the grid matches the screen axes, so input goes to the motor without conversion.
+- **Art: Cole Foster packs (CC0)** for characters, enemies, props and tiles. No free kit matched Nanokings closely, so I picked one consistent CC0 source over mixing authors. The sprites are rendered by a generator whose code was written with AI coding agents. This is stated in the credits.
+- **No Unity Asset Store art.** The standard Asset Store EULA does not allow putting the files in a public repository, and reviewers need to open the project as is.
+- **Instant acceleration by default.** `CharacterMoveConfig` has max speed, an instant acceleration toggle and an acceleration value for a smooth ramp, so both readings of the requirement are covered.
+- **Movement logic in plain C# classes.** `CharacterMotor` and `PlayerInputReader` are not MonoBehaviours. `Player` creates them and forwards Unity callbacks (Humble Object). Enemies will reuse the same motor.
+- **Camera: Cinemachine 3 follow camera, no custom script.** Rigidbody interpolation is on to avoid jitter.
+- **Animation states are switched from code, not by Animator transitions.** `CharacterAnimator` picks the state from action and facing (`Walk_Side`, `Idle_Up`, ...) and calls `Animator.Play` only when it changes. Attack, hurt and death in Task 4 need exact timing, which is easier to follow in code than in a transition graph. Enemies will use the same state names with their own clips through an Animator Override Controller.
