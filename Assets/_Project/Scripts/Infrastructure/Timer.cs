@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Isometric2DGame.Infrastructure
 {
     public class Timer
@@ -19,6 +17,11 @@ namespace Isometric2DGame.Infrastructure
         public void Reset()
         {
             _currentTime = _initTime;
+        }
+
+        public void SetDone()
+        {
+            _currentTime = 0;
         }
 
         public void Tick(float deltaTime)

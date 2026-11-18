@@ -1,3 +1,4 @@
+using Isometric2DGame.Animations;
 using Isometric2DGame.Movement;
 using Isometric2DGame.StateMachines;
 using UnityEngine;
@@ -9,12 +10,14 @@ namespace Isometric2DGame.EnemyCharacter
         private readonly CharacterMotor _motor;
         private readonly PlayerSensor _sensor;
         private readonly IPositionHolder _positionHolder;
+        private readonly CharacterAnimator _animator;
 
-        public ChaseEnemyState(IPositionHolder positionHolder, CharacterMotor motor, PlayerSensor sensor)
+        public ChaseEnemyState(IPositionHolder positionHolder, CharacterMotor motor, PlayerSensor sensor, CharacterAnimator animator)
         {
             _positionHolder = positionHolder;
             _motor = motor;
             _sensor = sensor;
+            _animator = animator;
         }
 
         public void Enter()
@@ -24,6 +27,7 @@ namespace Isometric2DGame.EnemyCharacter
         public void Tick(float deltaTime)
         {
             _motor.SetDirection(GetDirection());
+            _animator.PlayLocomotion(_motor.Velocity);
         }
 
         private Vector2 GetDirection()
@@ -33,7 +37,7 @@ namespace Isometric2DGame.EnemyCharacter
 
         public void Exit()
         {
-            _motor.SetDirection(Vector2.zero);
+            _motor.Reset();
         }
     }
 }

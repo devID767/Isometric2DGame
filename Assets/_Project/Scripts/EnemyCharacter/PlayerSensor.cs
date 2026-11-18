@@ -8,7 +8,6 @@ namespace Isometric2DGame.EnemyCharacter
         private readonly IPositionHolder _positionHolder;
         private readonly EnemyConfig _enemyConfig;
 
-        private float _detectRadius => _enemyConfig.DetectRadius;
         private float _loseRadius => _enemyConfig.LoseRadius;
         private LayerMask _playerMask => _enemyConfig.PlayerMask;
         private LayerMask _obstacleMask => _enemyConfig.ObstackeMask;
@@ -17,6 +16,7 @@ namespace Isometric2DGame.EnemyCharacter
         public Vector2 TargetPosition { get; private set; }
         public float Distance { get; private set; }
         public bool HasLineOfSight { get; private set; }
+        public Vector2 LastSeenPosition { get; private set; }
 
         public bool CanSee(float radius) => HasTarget && HasLineOfSight && Distance <= radius;
 
@@ -39,6 +39,8 @@ namespace Isometric2DGame.EnemyCharacter
             {
                 Distance = Vector2.Distance(_positionHolder.Position, playerPosition);
                 HasLineOfSight = !HasObstaclesOnLine(playerPosition);
+                if (HasLineOfSight)
+                    LastSeenPosition = playerPosition;
             }
         }
 
@@ -47,7 +49,7 @@ namespace Isometric2DGame.EnemyCharacter
             var playerCollider = Physics2D.OverlapCircle(_positionHolder.Position, radius, _playerMask);
             if (playerCollider != null)
             {
-                position = playerCollider.attachedRigidbody ? 
+                position = playerCollider.attachedRigidbody ?
                     playerCollider.attachedRigidbody.position : playerCollider.transform.position;
                 return true;
             }

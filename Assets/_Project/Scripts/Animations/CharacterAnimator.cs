@@ -21,11 +21,33 @@ namespace Isometric2DGame.Animations
             _spriteRenderer = spriteRenderer;
         }
 
-        public void Tick(Vector2 velocity)
+        public void Face(Vector2 direction)
+        {
+            SelectDirection(direction);
+            PlayAnimation(_action);
+        }
+
+        public void PlayAnimation(CharacterAction action, bool restart = false)
+        {
+            _action = action;
+
+            var hash = CharacterAnimations.Get(_action, _direction);
+            if (hash != _currentHash)
+            {
+                _anim.Play(hash);
+                _currentHash = hash;
+            }
+            else if (restart)
+            {
+                _anim.Play(hash, 0, 0f);
+            }
+        }
+
+        public void PlayLocomotion(Vector2 velocity)
         {
             SelectAnimation(velocity);
 
-            PlayAnimation();
+            PlayAnimation(_action);
         }
 
         public void Reset()
@@ -65,16 +87,6 @@ namespace Isometric2DGame.Animations
                         _direction = FacingDirection.Down;
                 }
                 _spriteRenderer.flipX = _direction == FacingDirection.Side && !_facingRight;
-            }
-        }
-
-        private void PlayAnimation()
-        {
-            var hash = CharacterAnimations.Get(_action, _direction);
-            if (hash != _currentHash)
-            {
-                _anim.Play(hash);
-                _currentHash = hash;
             }
         }
 

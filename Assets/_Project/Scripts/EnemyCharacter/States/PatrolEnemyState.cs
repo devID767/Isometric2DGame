@@ -1,4 +1,6 @@
-using System.Collections.Generic;
+using Isometric2DGame.Animations;
+using Isometric2DGame.Environment;
+using Isometric2DGame.Infrastructure;
 using Isometric2DGame.Movement;
 using Isometric2DGame.StateMachines;
 using UnityEngine;
@@ -8,73 +10,62 @@ namespace Isometric2DGame.EnemyCharacter
     public class PatrolEnemyState : ITickableState
     {
         private const float Threshold = 0.1f;
+        private const float PatrolPointTimeout = 15f;
 
-        private readonly IPositionHolder _posHolder;
+        private readonly IPositionHolder _self;
         private readonly CharacterMotor _motor;
-        private readonly List<Vector2> _points;
+        private readonly PatrolRoute _route;
+        private readonly CharacterAnimator _animator;
 
-        public bool HasPoints => _points != null && _points.Count > 0;
+        private readonly Timer _patrolPointTimer;
 
-        private int _currentIndex;
+        public bool IsArrived { get; private set; }
 
-        public PatrolEnemyState(IPositionHolder posHolder, CharacterMotor motor, List<Vector2> points)
+        private Vector2 _point;
+
+        public PatrolEnemyState(IPositionHolder self, CharacterMotor motor, PatrolRoute route, CharacterAnimator animator)
         {
-            _posHolder = posHolder;
+            _self = self;
             _motor = motor;
-            _points = points;
+            _animator = animator;
+            _route = route;
+
+            _patrolPointTimer = new Timer(PatrolPointTimeout);
         }
 
         public void Enter()
         {
-            SetNearbyPoint();
+            IsArrived = !_route.TryGetNextPoint(_self.Position, out _point);
+            _patrolPointTimer.Reset();
         }
 
         public void Tick(float deltaTime)
         {
-            var distance = GetDistance(_currentIndex);
-            if (distance < Threshold)
+            if (IsArrived)
+                return;
+
+            _patrolPointTimer.Tick(deltaTime);
+
+            if (_patrolPointTimer.IsDone)
             {
-                SetNextPoint();
+                IsArrived = true;
+                return;
             }
-            var direction = GetDirection();
 
-            _motor.SetDirection(direction);
-        }
-
-        private Vector2 GetDirection()
-        {
-            return (_points[_currentIndex] - _posHolder.Position).normalized;
-        }
-
-        private float GetDistance(int index)
-        {
-            return Vector2.Distance(_points[index], _posHolder.Position);
-        }
-
-        private void SetNextPoint()
-        {
-            _currentIndex++;
-            if (_currentIndex > _points.Count - 1)
-                _currentIndex = 0;
-        }
-
-        private void SetNearbyPoint()
-        {
-            var closestDistance = float.MaxValue;
-            for(int i = 0; i < _points.Count; i++)
+            if ((_point - _self.Position).sqrMagnitude < Threshold * Threshold)
             {
-                var distance = GetDistance(i);
-                if(distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    _currentIndex = i;
-                }
+                IsArrived = true;
+                return;
             }
+
+            _motor.SetDirection((_point - _self.Position).normalized);
+            _animator.PlayLocomotion(_motor.Velocity);
         }
 
         public void Exit()
         {
-            _motor.SetDirection(Vector2.zero);
+            _motor.Reset();
+            IsArrived = false;
         }
     }
 }

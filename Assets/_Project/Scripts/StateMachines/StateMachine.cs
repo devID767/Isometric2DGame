@@ -20,7 +20,7 @@ namespace Isometric2DGame.StateMachines
         public void Restart()
         {
             Stop();
-            CurrentState = _initialState;
+            ChangeState(_initialState);
         }
 
         public void AddTransition(IState from, IState to, Func<bool> condition)

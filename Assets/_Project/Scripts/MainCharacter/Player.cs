@@ -35,7 +35,7 @@ namespace Isometric2DGame.MainCharacter
         private void Update()
         {
             _motor.SetDirection(_inputReader.GetMoveInput());
-            _characterAnimator.Tick(_motor.Velocity);
+            _characterAnimator.PlayLocomotion(_motor.Velocity);
         }
 
         private void FixedUpdate()
