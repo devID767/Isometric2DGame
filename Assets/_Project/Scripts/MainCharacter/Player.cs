@@ -2,7 +2,7 @@ using Isometric2DGame.Animations;
 using Isometric2DGame.Movement;
 using UnityEngine;
 
-namespace Isometric2DGame.Characters
+namespace Isometric2DGame.MainCharacter
 {
     [RequireComponent(typeof(Rigidbody2D))]
     public class Player : MonoBehaviour
@@ -11,26 +11,31 @@ namespace Isometric2DGame.Characters
         [SerializeField] private Animator _animator;
         [SerializeField] private CharacterMoveConfig _moveConfig;
 
+        private Rigidbody2D _rb;
+
         private CharacterMotor _motor;
         private PlayerInputReader _inputReader;
         private CharacterAnimator _characterAnimator;
 
         private void Awake()
         {
+            _rb = GetComponent<Rigidbody2D>();
+            
             _inputReader = new PlayerInputReader();
-            _motor = new CharacterMotor(GetComponent<Rigidbody2D>(), _moveConfig);
+            _motor = new CharacterMotor(_rb, _moveConfig);
             _characterAnimator = new CharacterAnimator(_animator, _spriteRenderer);
         }
 
         private void OnEnable()
         {
             _inputReader.Enable();
+            _characterAnimator.Reset();
         }
 
         private void Update()
         {
-            _motor.SetMoveInput(_inputReader.GetMoveInput());
-            _characterAnimator.Tick(_motor.Velocity);
+            _motor.SetDirection(_inputReader.GetMoveInput());
+            _characterAnimator.PlayLocomotion(_motor.Velocity);
         }
 
         private void FixedUpdate()
@@ -41,7 +46,7 @@ namespace Isometric2DGame.Characters
         private void OnDisable()
         {
             _inputReader.Disable();
-            _motor.SetMoveInput(Vector2.zero);
+            _motor.Reset();;
         }
 
         private void OnDestroy()

@@ -163,12 +163,12 @@ TextureImporter:
       name: cursed_skeleton_side_attack_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 108
-        height: 108
-      alignment: 7
-      pivot: {x: 0, y: 0}
+        x: 32
+        y: 22
+        width: 68
+        height: 76
+      alignment: 9
+      pivot: {x: 0.470588, y: 0.131579}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -185,12 +185,12 @@ TextureImporter:
       name: cursed_skeleton_side_attack_1
       rect:
         serializedVersion: 2
-        x: 108
-        y: 0
-        width: 108
-        height: 108
-      alignment: 7
-      pivot: {x: 0, y: 0}
+        x: 140
+        y: 22
+        width: 68
+        height: 76
+      alignment: 9
+      pivot: {x: 0.470588, y: 0.131579}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -207,12 +207,12 @@ TextureImporter:
       name: cursed_skeleton_side_attack_2
       rect:
         serializedVersion: 2
-        x: 216
-        y: 0
-        width: 108
-        height: 108
-      alignment: 7
-      pivot: {x: 0, y: 0}
+        x: 248
+        y: 22
+        width: 68
+        height: 76
+      alignment: 9
+      pivot: {x: 0.470588, y: 0.131579}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -229,12 +229,12 @@ TextureImporter:
       name: cursed_skeleton_side_attack_3
       rect:
         serializedVersion: 2
-        x: 324
-        y: 0
-        width: 108
-        height: 108
-      alignment: 7
-      pivot: {x: 0, y: 0}
+        x: 356
+        y: 22
+        width: 68
+        height: 76
+      alignment: 9
+      pivot: {x: 0.470588, y: 0.131579}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -251,12 +251,12 @@ TextureImporter:
       name: cursed_skeleton_side_attack_4
       rect:
         serializedVersion: 2
-        x: 432
-        y: 0
-        width: 108
-        height: 108
-      alignment: 7
-      pivot: {x: 0, y: 0}
+        x: 464
+        y: 22
+        width: 68
+        height: 76
+      alignment: 9
+      pivot: {x: 0.470588, y: 0.131579}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -273,12 +273,12 @@ TextureImporter:
       name: cursed_skeleton_side_attack_5
       rect:
         serializedVersion: 2
-        x: 540
-        y: 0
-        width: 108
-        height: 108
-      alignment: 7
-      pivot: {x: 0, y: 0}
+        x: 572
+        y: 22
+        width: 68
+        height: 76
+      alignment: 9
+      pivot: {x: 0.470588, y: 0.131579}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -295,12 +295,12 @@ TextureImporter:
       name: cursed_skeleton_side_attack_6
       rect:
         serializedVersion: 2
-        x: 648
-        y: 0
-        width: 108
-        height: 108
-      alignment: 7
-      pivot: {x: 0, y: 0}
+        x: 680
+        y: 22
+        width: 68
+        height: 76
+      alignment: 9
+      pivot: {x: 0.470588, y: 0.131579}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -317,12 +317,12 @@ TextureImporter:
       name: cursed_skeleton_side_attack_7
       rect:
         serializedVersion: 2
-        x: 756
-        y: 0
-        width: 108
-        height: 108
-      alignment: 7
-      pivot: {x: 0, y: 0}
+        x: 788
+        y: 22
+        width: 68
+        height: 76
+      alignment: 9
+      pivot: {x: 0.470588, y: 0.131579}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []

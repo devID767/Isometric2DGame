@@ -1,4 +1,4 @@
 namespace Isometric2DGame.Animations
 {
-    public enum CharacterAction { Idle, Walk }
+    public enum CharacterAction { Idle, Walk, Attack }
 }

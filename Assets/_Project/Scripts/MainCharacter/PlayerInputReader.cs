@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Isometric2DGame.Characters
+namespace Isometric2DGame.MainCharacter
 {
     public class PlayerInputReader : IDisposable
     {

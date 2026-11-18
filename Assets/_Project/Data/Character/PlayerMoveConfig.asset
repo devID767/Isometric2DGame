@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd80aaa8489b64177a862f3e40f2dd3c, type: 3}
-  m_Name: CharacterMoveConfig
+  m_Name: PlayerMoveConfig
   m_EditorClassIdentifier: Assembly-CSharp::CharacterMoveConfig
   <MaxSpeed>k__BackingField: 3
   <InstantAcceleration>k__BackingField: 1
