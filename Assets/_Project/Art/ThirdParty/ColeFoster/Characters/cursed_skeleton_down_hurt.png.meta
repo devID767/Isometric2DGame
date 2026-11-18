@@ -163,12 +163,12 @@ TextureImporter:
       name: cursed_skeleton_down_hurt_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 108
-        height: 108
-      alignment: 7
-      pivot: {x: 0, y: 0}
+        x: 52
+        y: 32
+        width: 22
+        height: 54
+      alignment: 9
+      pivot: {x: 0.545455, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -185,12 +185,12 @@ TextureImporter:
       name: cursed_skeleton_down_hurt_1
       rect:
         serializedVersion: 2
-        x: 108
-        y: 0
-        width: 108
-        height: 108
-      alignment: 7
-      pivot: {x: 0, y: 0}
+        x: 160
+        y: 32
+        width: 22
+        height: 54
+      alignment: 9
+      pivot: {x: 0.545455, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -207,12 +207,12 @@ TextureImporter:
       name: cursed_skeleton_down_hurt_2
       rect:
         serializedVersion: 2
-        x: 216
-        y: 0
-        width: 108
-        height: 108
-      alignment: 7
-      pivot: {x: 0, y: 0}
+        x: 268
+        y: 32
+        width: 22
+        height: 54
+      alignment: 9
+      pivot: {x: 0.545455, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -229,12 +229,12 @@ TextureImporter:
       name: cursed_skeleton_down_hurt_3
       rect:
         serializedVersion: 2
-        x: 324
-        y: 0
-        width: 108
-        height: 108
-      alignment: 7
-      pivot: {x: 0, y: 0}
+        x: 376
+        y: 32
+        width: 22
+        height: 54
+      alignment: 9
+      pivot: {x: 0.545455, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -251,12 +251,12 @@ TextureImporter:
       name: cursed_skeleton_down_hurt_4
       rect:
         serializedVersion: 2
-        x: 432
-        y: 0
-        width: 108
-        height: 108
-      alignment: 7
-      pivot: {x: 0, y: 0}
+        x: 484
+        y: 32
+        width: 22
+        height: 54
+      alignment: 9
+      pivot: {x: 0.545455, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -273,12 +273,12 @@ TextureImporter:
       name: cursed_skeleton_down_hurt_5
       rect:
         serializedVersion: 2
-        x: 540
-        y: 0
-        width: 108
-        height: 108
-      alignment: 7
-      pivot: {x: 0, y: 0}
+        x: 592
+        y: 32
+        width: 22
+        height: 54
+      alignment: 9
+      pivot: {x: 0.545455, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -295,12 +295,12 @@ TextureImporter:
       name: cursed_skeleton_down_hurt_6
       rect:
         serializedVersion: 2
-        x: 648
-        y: 0
-        width: 108
-        height: 108
-      alignment: 7
-      pivot: {x: 0, y: 0}
+        x: 700
+        y: 32
+        width: 22
+        height: 54
+      alignment: 9
+      pivot: {x: 0.545455, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -317,12 +317,12 @@ TextureImporter:
       name: cursed_skeleton_down_hurt_7
       rect:
         serializedVersion: 2
-        x: 756
-        y: 0
-        width: 108
-        height: 108
-      alignment: 7
-      pivot: {x: 0, y: 0}
+        x: 808
+        y: 32
+        width: 22
+        height: 54
+      alignment: 9
+      pivot: {x: 0.545455, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
