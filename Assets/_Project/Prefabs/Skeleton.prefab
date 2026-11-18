@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63428ec6660c94aafa6d467956fd724e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Isometric2DGame.EnemyCharacter.Enemy
-  _patrols: {fileID: 0}
+  _patrolRoute: {fileID: 0}
   _spriteRenderer: {fileID: 1000000000000000023}
   _animator: {fileID: 1000000000000000024}
   _moveConfig: {fileID: 11400000, guid: d43b21be5be054a9e80f38a585040a24, type: 2}

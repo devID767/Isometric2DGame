@@ -14,8 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Isometric2DGame.EnemyCharacter.EnemyConfig
   <DetectRadius>k__BackingField: 4
   <LoseRadius>k__BackingField: 6
-  <AttackRange>k__BackingField: 0.8
-  <IdleTime>k__BackingField: 3
+  <AttackDamage>k__BackingField: 1
+  <AttackCooldown>k__BackingField: 0.5
+  <AttackRange>k__BackingField: 0.4
+  <AttackExitMargin>k__BackingField: 0.2
+  <IdleTime>k__BackingField: 1
+  <SearchHoldTime>k__BackingField: 3
   <PlayerMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 128
