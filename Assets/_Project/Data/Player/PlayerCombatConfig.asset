@@ -13,3 +13,15 @@ MonoBehaviour:
   m_Name: PlayerCombatConfig
   m_EditorClassIdentifier: Assembly-CSharp::Isometric2DGame.MainCharacter.PlayerCombatConfig
   <MaxHP>k__BackingField: 5
+  <Attack>k__BackingField:
+    <Damage>k__BackingField: 1
+    <MoveSpeedScale>k__BackingField: 0.5
+    <Offset>k__BackingField: 0.35
+    <Radius>k__BackingField: 0.35
+    <Swing>k__BackingField:
+      <HitDelay>k__BackingField: 0.15
+      <Cooldown>k__BackingField: 0.5
+      <Duration>k__BackingField: 0.45
+    <Enemy>k__BackingField:
+      serializedVersion: 2
+      m_Bits: 256

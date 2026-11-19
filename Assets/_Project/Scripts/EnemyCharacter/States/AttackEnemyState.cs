@@ -1,4 +1,5 @@
 using Isometric2DGame.Animations;
+using Isometric2DGame.Combat;
 using Isometric2DGame.Infrastructure;
 using Isometric2DGame.StateMachines;
 using UnityEngine;
@@ -7,17 +8,14 @@ namespace Isometric2DGame.EnemyCharacter
 {
     public class AttackEnemyState : ITickableState
     {
-        private readonly Timer _cooldown;
-        private readonly Timer _hitDelay;
-        private readonly Timer _swingTimer;
         private readonly CharacterAnimator _animator;
         private readonly IPositionHolder _self;
         private readonly PlayerSensor _sensor;
         private readonly EnemyConfig.AttackSettings _settings;
 
-        public bool Swinging { get; private set; }
+        private readonly Swing _swing;
 
-        private bool _hitDone;
+        public bool Swinging => _swing.Swinging;
 
         public AttackEnemyState(EnemyConfig.AttackSettings settings, IPositionHolder self, PlayerSensor sensor, CharacterAnimator animator)
         {
@@ -26,50 +24,29 @@ namespace Isometric2DGame.EnemyCharacter
             _self = self;
             _sensor = sensor;
 
-            _cooldown = new Timer(settings.Cooldown);
-            _hitDelay = new Timer(settings.HitDelay);
-            _swingTimer = new Timer(settings.SwingDuration);
+            _swing = new Swing(settings.Swing);
+            _animator.SetDuration(CharacterAction.Attack, _settings.Swing.Duration);
         }
 
         public void Enter()
         {
-            _cooldown.SetDone();
-            _hitDelay.Reset();
-            Swinging = false;
+            _swing.Reset();
         }
 
         public void Exit()
         {
-            Swinging = false;
         }
 
         public void Tick(float deltaTime)
         {
-            _cooldown.Tick(deltaTime);
-
-            if (_cooldown.IsDone && !Swinging)
+            if (_swing.TryStart())
             {
                 PlayAnimation();
-                _hitDelay.Reset();
-                _cooldown.Reset();
-                _swingTimer.Reset();
-                Swinging = true;
-                _hitDone = false;
             }
 
-            if (Swinging)
+            if (_swing.Tick(deltaTime))
             {
-                _hitDelay.Tick(deltaTime);
-                _swingTimer.Tick(deltaTime);
-
-                if (_hitDelay.IsDone && !_hitDone)
-                {
-                    TryHit();
-                    _hitDone = true;
-                }
-
-                if (_swingTimer.IsDone)
-                    Swinging = false;
+                TryHit();
             }
         }
 

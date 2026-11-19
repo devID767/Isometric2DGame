@@ -1,4 +1,3 @@
-using System;
 using Isometric2DGame.Animations;
 using Isometric2DGame.Combat;
 using Isometric2DGame.Movement;
@@ -20,6 +19,7 @@ namespace Isometric2DGame.MainCharacter
         private PlayerInputReader _inputReader;
         private CharacterAnimator _characterAnimator;
         private Health _health;
+        private PlayerMeleeAttack _attack;
 
         public Vector2 Position => _rb.position;
 
@@ -33,6 +33,9 @@ namespace Isometric2DGame.MainCharacter
             _motor = new CharacterMotor(_rb, _moveConfig);
             _characterAnimator = new CharacterAnimator(_animator, _spriteRenderer);
             _health = new Health(_combatConfig.MaxHP);
+
+            _attack = new PlayerMeleeAttack(this, _combatConfig.Attack);
+            _characterAnimator.SetDuration(CharacterAction.Attack, _combatConfig.Attack.Swing.Duration);
         }
 
         private void OnEnable()
@@ -40,14 +43,29 @@ namespace Isometric2DGame.MainCharacter
             _health.Reset();
             _inputReader.Enable();
             _characterAnimator.Reset();
+            _attack.Reset();
 
             _health.Died += OnDied;
         }
 
         private void Update()
         {
-            _motor.SetDirection(_inputReader.GetMoveInput());
-            _characterAnimator.PlayLocomotion(_motor.Velocity);
+            _attack.Tick(Time.deltaTime);
+            if (_inputReader.AttackPressed && _attack.TryStart(_characterAnimator.GetFacing()))
+            {
+                _characterAnimator.PlayAnimation(CharacterAction.Attack, restart: true);
+            }
+
+            var input = _inputReader.GetMoveInput();
+            if (_attack.Swinging)
+            {
+                _motor.SetDirection(input, _combatConfig.Attack.MoveSpeedScale);
+            }
+            else
+            {
+                _motor.SetDirection(input);
+                _characterAnimator.PlayLocomotion(_motor.Velocity);
+            }
         }
 
         private void FixedUpdate()
@@ -55,9 +73,15 @@ namespace Isometric2DGame.MainCharacter
             _motor.FixedTick();
         }
 
-         private void OnDied()
+        private void OnDied()
         {
             enabled = false;
+        }
+
+        public void TakeDamage(int value)
+        {
+            _health.TakeDamage(value);
+            Debug.Log($"Take damage{value}");
         }
 
         private void OnDisable()
@@ -73,10 +97,14 @@ namespace Isometric2DGame.MainCharacter
             _inputReader.Dispose();
         }
 
-        public void TakeDamage(int value)
+        void OnDrawGizmosSelected()
         {
-            _health.TakeDamage(value);
-            Debug.Log($"Take damage{value}");
+            if (Application.isPlaying)
+            {
+                Gizmos.color = Color.red;
+                var center = Position + _characterAnimator.GetFacing() * _combatConfig.Attack.Offset;
+                Gizmos.DrawWireSphere(center, _combatConfig.Attack.Radius);
+            }
         }
     }
 }

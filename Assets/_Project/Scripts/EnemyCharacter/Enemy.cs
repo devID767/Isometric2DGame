@@ -43,6 +43,14 @@ namespace Isometric2DGame.EnemyCharacter
         {
             _characterAnimator.Reset();
             _stateMachine.Restart();
+            _health.Reset();
+
+            _health.Died += OnDied;
+        }
+
+        private void OnDied()
+        {
+            gameObject.SetActive(false);
         }
 
         private void Update()
@@ -60,6 +68,8 @@ namespace Isometric2DGame.EnemyCharacter
         {
             _stateMachine.Stop();
             _motor.Reset();
+
+            _health.Died -= OnDied;
         }
 
         private void OnDrawGizmosSelected()
@@ -110,7 +120,8 @@ namespace Isometric2DGame.EnemyCharacter
 
         public void TakeDamage(int value)
         {
-            
+            _health.TakeDamage(value);
+            Debug.Log("Enemy take damage");
         }
     }
 }

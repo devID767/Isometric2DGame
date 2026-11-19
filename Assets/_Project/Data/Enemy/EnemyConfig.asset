@@ -29,11 +29,12 @@ MonoBehaviour:
     <SpeedMultiplier>k__BackingField: 1.25
   <Attack>k__BackingField:
     <Damage>k__BackingField: 1
-    <HitDelay>k__BackingField: 0.25
-    <Cooldown>k__BackingField: 0.9
-    <SwingDuration>k__BackingField: 0.67
-    <Range>k__BackingField: 0.3
-    <ExitRange>k__BackingField: 0.4
+    <Range>k__BackingField: 0.4
+    <ExitRange>k__BackingField: 0.5
+    <Swing>k__BackingField:
+      <HitDelay>k__BackingField: 0.25
+      <Cooldown>k__BackingField: 0.9
+      <Duration>k__BackingField: 0.67
   <Search>k__BackingField:
     <HoldTime>k__BackingField: 3
     <Timeout>k__BackingField: 15

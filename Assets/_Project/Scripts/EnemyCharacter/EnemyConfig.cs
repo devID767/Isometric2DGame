@@ -12,26 +12,18 @@ namespace Isometric2DGame.EnemyCharacter
             [field: Min(0)]
             [field: SerializeField] public int Damage { get; private set; } = 1;
             [field: Min(0)]
-            [field: SerializeField] public float HitDelay { get; private set; } = 0.15f;
-            [field: Min(0)]
-            [field: SerializeField] public float Cooldown { get; private set; } = 0.9f;
-            [field: Min(0)]
-            [field: SerializeField] public float SwingDuration { get; private set; } = 0.67f;
-            [field: Min(0)]
             [field: SerializeField] public float Range { get; private set; } = 0.4f;
             [field: Min(0)]
             [field: SerializeField] public float ExitRange { get; private set; } = 0.6f;
+
+            [field: SerializeField] public Combat.Swing.SwingSettings Swing { get; private set; } = new ();
 
             public void Validate()
             {
                 if (ExitRange < Range)
                     ExitRange = Range + 0.1f;
 
-                if (SwingDuration > Cooldown)
-                    SwingDuration = Cooldown;
-
-                if (HitDelay > SwingDuration)
-                    HitDelay = SwingDuration;
+                Swing.Validate();
             }
         }
 
