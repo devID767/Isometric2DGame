@@ -32,7 +32,7 @@ There are two skeletons. `Skeleton` walks between fixed waypoints to the right o
 - **Chase.** Walk into the yellow circle. The skeleton follows the knight. It sees only in a straight line: hide behind a wall or a pillar and it does not notice you.
 - **Search.** Run out of the grey circle or break line of sight. The skeleton walks to the place where it last saw you, looks left and right for a few seconds, then goes back to patrolling. The waypoint skeleton returns to its nearest point. Step back into view during the search and the chase starts again.
 - **Attack.** Let it come close. The skeleton stops, turns to the knight, plays the attack animation and logs `Attacking with damage ...` in the Console on a cooldown. It stays in attack a bit past the attack range, so it does not jitter between chase and attack. The lose radius is bigger than the detect radius for the same reason.
-- **Tuning.** Radii, attack range, damage, cooldown, idle and search times are in `Assets/_Project/Data/Enemy/EnemyConfig.asset`. Speed is in `Assets/_Project/Data/Character/EnemyMoveConfig.asset`. Both can be changed during Play mode. The patrol area radius is on the `SkeletonArea` object.
+- **Tuning.** Radii, attack range, damage, cooldown, idle and search times are in `Assets/_Project/Data/Enemy/EnemyConfig.asset`. Speed is in `Assets/_Project/Data/Character/EnemyMoveConfig.asset`. Speed, chase speed and attack range can be changed during Play mode. Other enemy values are read when the enemy starts, so restart Play mode after changing them. The patrol area radius is on the `SkeletonArea` object.
 
 ### Task 4, combat
 TODO

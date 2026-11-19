@@ -9,13 +9,12 @@ namespace Isometric2DGame.EnemyCharacter
     public class SearchEnemyState : ITickableState
     {
         private const float DistanceThreshold = 0.1f;
-        private const float Timeout = 15f;
-        private const float HoldAnimationTimes = 6;
 
         private readonly PlayerSensor _sensor;
         private readonly IPositionHolder _self;
         private readonly CharacterAnimator _animator;
         private readonly CharacterMotor _motor;
+        private readonly EnemyConfig.SearchSettings _settings;
 
         private readonly Timer _holdTimer;
         private readonly Timer _extraTimer;
@@ -27,16 +26,17 @@ namespace Isometric2DGame.EnemyCharacter
 
         private Vector2 _targetPosition;
 
-        public SearchEnemyState(IPositionHolder self, PlayerSensor sensor, CharacterAnimator animator, CharacterMotor motor, float holdTime)
+        public SearchEnemyState(IPositionHolder self, PlayerSensor sensor, CharacterAnimator animator, CharacterMotor motor, EnemyConfig.SearchSettings settings)
         {
             _self = self;
             _sensor = sensor;
             _animator = animator;
             _motor = motor;
+            _settings = settings;
 
-            _holdTimer = new Timer(holdTime);
-            _holdAnimationTimer = new Timer(holdTime / HoldAnimationTimes);
-            _extraTimer = new Timer(Timeout);
+            _holdTimer = new Timer(_settings.HoldTime);
+            _holdAnimationTimer = new Timer(_settings.HoldTime / _settings.LookCount);
+            _extraTimer = new Timer(_settings.Timeout);
         }
 
         public void Enter()

@@ -64,6 +64,7 @@ Estimates are focused work hours, breaks not included.
 **Polish and QA**
 - Level layout and enemy placement
 - Enemy animations
+- Alert marker over the enemy: "!" on chase, "?" on search
 - UI styling
 - Playtest as a player, fix what feels wrong
 - Code cleanup and comments
@@ -78,7 +79,7 @@ Estimates are focused work hours, breaks not included.
 1. Hit particles - 1 h
 2. Attack and death animations - 1 h
 3. 2D lighting and post-processing - 1 h
-4. NavMesh pathfinding for enemies - 2 h
+4. NavMesh pathfinding for enemies - 2 h. Chase moves in a straight line and catches on corners
 
 ## Decisions
 
@@ -94,8 +95,12 @@ Added as they are made.
 - **Animation states are switched from code, not by Animator transitions.** `CharacterAnimator` picks the state from action and facing (`Walk_Side`, `Idle_Up`, ...) and calls `Animator.Play` only when it changes. Attack, hurt and death in Task 4 need exact timing, which is easier to follow in code than in a transition graph. Enemies will use the same state names with their own clips through an Animator Override Controller.
 - **Enemy state machine with a transition table** (18.11). States implement `Enter`/`Exit` and optionally `Tick`/`FixedTick`. They do not switch states themselves: `StateMachine` stores `(from, to, condition)` transitions and checks them before ticking the current state, first match wins. All enemy behaviour is readable in one method, and a state never changes the state while it is still running its own `Enter` or `Exit`.
 - **Player detection by query, not by trigger collider.** `PlayerSensor` runs `OverlapCircle` with the Player mask at the lose radius and a `Linecast` with the Obstacles mask, once per frame in `Refresh()`. States and transitions read the cached values. Without a target the distance is infinity, so range checks fail without extra null checks.
-- **Hysteresis for transitions.** Lose radius is bigger than detect radius, and attack ends at attack range plus a margin. Without it the enemy flickers between states when the player stands on a border.
+- **Hysteresis for transitions.** Lose radius is bigger than detect radius, and attack ends at an exit range bigger than the attack range. Without it the enemy flickers between states when the player stands on a border.
 - **"Dynamic patrol routes": random area route plus search state.** I read "change or randomize" as two things. Randomize: `AreaPatrolRoute` picks a random point in a circle and checks it with `OverlapCircle` (not inside an obstacle) and `CircleCast` (the body can walk there in a straight line). Change: after losing the player the enemy goes to the last seen position and looks around before returning to its route. Fixed waypoints stay available as `WaypointPatrolRoute`, which returns to the nearest point after a chase.
 - **Patrol route as a strategy.** `PatrolRoute` is an abstract MonoBehaviour with `TryGetNextPoint`. The patrol state walks to the point and reports arrival, the route decides which point. A MonoBehaviour and not an interface, so the route can be assigned in the Inspector.
 - **States drive the animation.** `CharacterAnimator` no longer decides the action from velocity on its own. It has `Face`, `PlayAnimation` and `PlayLocomotion`, and each state calls what it needs. Attack and look-around need an explicit action and facing that velocity cannot give.
 - **Enemy reuses the player's motor and animator.** Same `CharacterMotor` with its own `EnemyMoveConfig`, same Animator Controller through an Animator Override Controller with skeleton clips.
+- **Health moved to Task 4, enemy state shown by animation** (19.11). Health only matters once something deals damage, so it is built together with combat. The brief allows colour or gizmos for the enemy state. Patrol, chase and attack already look different through walk, idle and attack clips, and search adds the look-around. Chase and patrol share the walk clip, which is why an alert marker is planned for polish.
+- **`EnemyConfig` grouped into nested settings** (19.11). Detection and each state (idle, patrol, chase, attack, search) get a `[Serializable]` class inside the one config asset, and each state receives only its group. One enemy type does not justify several config assets, and the groups keep the inspector readable and the constructors short. Patrol and search timeouts and the number of look-around turns moved there from constants.
+- **Faster chase.** The chase state passes a speed multiplier (1.25) to `CharacterMotor.SetDirection`, so the enemy is faster than on patrol but still slower than the player (2.5 vs 3), and the player can escape. The multiplier goes with the direction, so no state has to reset it.
+- **Attack needs line of sight.** Chase switches to attack only with `CanSee(attack range)`, and attack returns to chase when the line of sight is lost, so the enemy cannot hit through a wall.

@@ -6,11 +6,11 @@ namespace Isometric2DGame.EnemyCharacter
     public class PlayerSensor
     {
         private readonly IPositionHolder _positionHolder;
-        private readonly EnemyConfig _enemyConfig;
+        private readonly EnemyConfig.DetectionSettings _config;
 
-        private float _loseRadius => _enemyConfig.LoseRadius;
-        private LayerMask _playerMask => _enemyConfig.PlayerMask;
-        private LayerMask _obstacleMask => _enemyConfig.ObstackeMask;
+        private float _loseRadius => _config.LoseRadius;
+        private LayerMask _playerMask => _config.PlayerMask;
+        private LayerMask _obstacleMask => _config.ObstackeMask;
 
         public bool HasTarget { get; private set; }
         public Vector2 TargetPosition { get; private set; }
@@ -20,10 +20,10 @@ namespace Isometric2DGame.EnemyCharacter
 
         public bool CanSee(float radius) => HasTarget && HasLineOfSight && Distance <= radius;
 
-        public PlayerSensor(IPositionHolder positionHolder, EnemyConfig enemyConfig)
+        public PlayerSensor(IPositionHolder positionHolder, EnemyConfig.DetectionSettings detection)
         {
             _positionHolder = positionHolder;
-            _enemyConfig = enemyConfig;
+            _config = detection;
         }
 
         public void Refresh()

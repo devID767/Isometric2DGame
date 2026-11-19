@@ -55,13 +55,16 @@ namespace Isometric2DGame.Environment
 
         void OnDrawGizmosSelected()
         {
+            if(_points == null)
+                return;
+            
             Gizmos.color = Color.green;
             for (int i = 0; i < _points.Count - 1; i++)
             {
-                Gizmos.DrawLine(_points[i].transform.position, _points[i + 1].transform.position);
+                Gizmos.DrawLine(_points[i].position, _points[i + 1].position);
             }
-            if (_points.Count == 2)
-                Gizmos.DrawLine(_points[0].transform.position, _points[_points.Count - 1].transform.position);
+            if (_points.Count > 2)
+                Gizmos.DrawLine(_points[0].position, _points[_points.Count - 1].position);
         }
     }
 }

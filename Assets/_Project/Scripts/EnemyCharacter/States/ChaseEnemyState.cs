@@ -11,13 +11,15 @@ namespace Isometric2DGame.EnemyCharacter
         private readonly PlayerSensor _sensor;
         private readonly IPositionHolder _positionHolder;
         private readonly CharacterAnimator _animator;
+        private readonly EnemyConfig.ChaseSettings _settings;
 
-        public ChaseEnemyState(IPositionHolder positionHolder, CharacterMotor motor, PlayerSensor sensor, CharacterAnimator animator)
+        public ChaseEnemyState(IPositionHolder positionHolder, CharacterMotor motor, PlayerSensor sensor, CharacterAnimator animator, EnemyConfig.ChaseSettings settings)
         {
             _positionHolder = positionHolder;
             _motor = motor;
             _sensor = sensor;
             _animator = animator;
+            _settings = settings;
         }
 
         public void Enter()
@@ -26,7 +28,7 @@ namespace Isometric2DGame.EnemyCharacter
 
         public void Tick(float deltaTime)
         {
-            _motor.SetDirection(GetDirection());
+            _motor.SetDirection(GetDirection(), _settings.SpeedMultiplier);
             _animator.PlayLocomotion(_motor.Velocity);
         }
 

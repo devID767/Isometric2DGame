@@ -27,7 +27,7 @@ namespace Isometric2DGame.EnemyCharacter
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
-            _sensor = new PlayerSensor(this, _enemyConfig);
+            _sensor = new PlayerSensor(this, _enemyConfig.Detection);
             _motor = new CharacterMotor(_rb, _moveConfig);
             _characterAnimator = new CharacterAnimator(_animator, _spriteRenderer);
 
@@ -63,34 +63,35 @@ namespace Isometric2DGame.EnemyCharacter
                 return;
 
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, _enemyConfig.DetectRadius);
+            Gizmos.DrawWireSphere(transform.position, _enemyConfig.Detection.DetectRadius);
 
             Gizmos.color = Color.gray;
-            Gizmos.DrawWireSphere(transform.position, _enemyConfig.LoseRadius);
+            Gizmos.DrawWireSphere(transform.position, _enemyConfig.Detection.LoseRadius);
 
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, _enemyConfig.AttackRange);
+            Gizmos.DrawWireSphere(transform.position, _enemyConfig.Attack.Range);
         }
 
         private StateMachine CreateStateMachine()
         {
-            var idle = new IdleEnemyState(_enemyConfig.IdleTime, _characterAnimator);
-            var patrol = new PatrolEnemyState(this, _motor, _patrolRoute, _characterAnimator);
-            var chase = new ChaseEnemyState(this, _motor, _sensor, _characterAnimator);
-            var search = new SearchEnemyState(this, _sensor, _characterAnimator, _motor, _enemyConfig.SearchHoldTime);
-            var attack = new AttackEnemyState(this, _sensor, _enemyConfig.AttackDamage, _enemyConfig.AttackCooldown, _characterAnimator);
-            
+            var idle = new IdleEnemyState(_enemyConfig.Idle.HoldTime, _characterAnimator);
+            var patrol = new PatrolEnemyState(this, _motor, _patrolRoute, _characterAnimator, _enemyConfig.Patrol);
+            var chase = new ChaseEnemyState(this, _motor, _sensor, _characterAnimator, _enemyConfig.Chase);
+            var search = new SearchEnemyState(this, _sensor, _characterAnimator, _motor, _enemyConfig.Search);
+            var attack = new AttackEnemyState(_enemyConfig.Attack, this, _sensor, _characterAnimator);
+
             var stateMachine = new StateMachine(idle);
 
-            var detect = _enemyConfig.DetectRadius;
-            var lose = _enemyConfig.LoseRadius;
+            var detect = _enemyConfig.Detection.DetectRadius;
+            var lose = _enemyConfig.Detection.LoseRadius;
 
             stateMachine.AddTransition(idle, patrol, () => idle.IsDone);
             stateMachine.AddTransition(patrol, idle, () => patrol.IsArrived);
             stateMachine.AddTransition(idle, chase, () => CanSee(detect));
             stateMachine.AddTransition(patrol, chase, () => CanSee(detect));
-            stateMachine.AddTransition(chase, attack, () => _sensor.Distance < _enemyConfig.AttackRange);
-            stateMachine.AddTransition(attack, chase, () => _sensor.Distance > _enemyConfig.AttackRange + _enemyConfig.AttackExitMargin);
+            stateMachine.AddTransition(chase, attack, () => CanSee(_enemyConfig.Attack.Range));
+            stateMachine.AddTransition(attack, chase, 
+                () => !_sensor.HasLineOfSight || _sensor.Distance > _enemyConfig.Attack.ExitRange);
             stateMachine.AddTransition(chase, search, () => !CanSee(lose));
             stateMachine.AddTransition(search, chase, () => CanSee(detect));
             stateMachine.AddTransition(search, idle, () => search.IsDone);
