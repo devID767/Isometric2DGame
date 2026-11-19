@@ -7523,6 +7523,7 @@ MonoBehaviour:
   _spriteRenderer: {fileID: 1410615662}
   _animator: {fileID: 1410615663}
   _moveConfig: {fileID: 11400000, guid: 771705b5273694d59866ec657d8b6573, type: 2}
+  _combatConfig: {fileID: 11400000, guid: 9109dad7af2d42b6a2d7cfd1f6ee4ef7, type: 2}
 --- !u!61 &52521318
 BoxCollider2D:
   m_ObjectHideFlags: 0

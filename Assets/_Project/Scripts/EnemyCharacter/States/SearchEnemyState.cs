@@ -59,10 +59,6 @@ namespace Isometric2DGame.EnemyCharacter
             }
             else
             {
-                _motor.Reset();
-                _animator.PlayAnimation(CharacterAction.Idle);
-                _holdTimer.Tick(deltaTime);
-
                 _holdAnimationTimer.Tick(deltaTime);
                 if (_holdAnimationTimer.IsDone)
                 {
@@ -71,6 +67,10 @@ namespace Isometric2DGame.EnemyCharacter
                     _animator.Face(rotation);
                     _holdAnimationTimer.Reset();
                 }
+                
+                _motor.Reset();
+                _animator.PlayAnimation(CharacterAction.Idle);
+                _holdTimer.Tick(deltaTime);
             }
         }
 

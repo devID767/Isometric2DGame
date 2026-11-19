@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Isometric2DGame.Movement
+namespace Isometric2DGame.Infrastructure
 {
     public interface IPositionHolder
     {

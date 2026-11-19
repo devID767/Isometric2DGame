@@ -1,4 +1,5 @@
 using Isometric2DGame.Animations;
+using Isometric2DGame.Infrastructure;
 using Isometric2DGame.Movement;
 using Isometric2DGame.StateMachines;
 using UnityEngine;
@@ -34,7 +35,7 @@ namespace Isometric2DGame.EnemyCharacter
 
         private Vector2 GetDirection()
         {
-            return (_sensor.TargetPosition - _positionHolder.Position).normalized;
+            return (_sensor.Target.Position - _positionHolder.Position).normalized;
         }
 
         public void Exit()

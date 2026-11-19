@@ -24,6 +24,24 @@ namespace Isometric2DGame.Animations
         public void Face(Vector2 direction)
         {
             SelectDirection(direction);
+        }
+
+        public void PlayLocomotion(Vector2 velocity)
+        {
+            if (velocity.sqrMagnitude > Threshold)
+            {
+                _action = CharacterAction.Walk;
+
+                if (!IsMovingToward(_direction, velocity))
+                {
+                    SelectDirection(velocity);
+                }
+            }
+            else
+            {
+                _action = CharacterAction.Idle;
+            }
+
             PlayAnimation(_action);
         }
 
@@ -43,51 +61,27 @@ namespace Isometric2DGame.Animations
             }
         }
 
-        public void PlayLocomotion(Vector2 velocity)
-        {
-            SelectAnimation(velocity);
-
-            PlayAnimation(_action);
-        }
-
         public void Reset()
         {
             _currentHash = 0;
         }
 
-        private void SelectAnimation(Vector2 velocity)
+        private void SelectDirection(Vector2 velocity)
         {
-            if (velocity.sqrMagnitude > Threshold)
+            if (Mathf.Abs(velocity.x) >= Mathf.Abs(velocity.y))
             {
-                _action = CharacterAction.Walk;
+                _direction = FacingDirection.Side;
 
-                SelectDirection(velocity);
+                _facingRight = velocity.x > 0;
             }
             else
             {
-                _action = CharacterAction.Idle;
-            }
-        }
-
-        private void SelectDirection(Vector2 velocity)
-        {
-            if (!IsMovingToward(_direction, velocity))
-            {
-                if (Mathf.Abs(velocity.x) >= Mathf.Abs(velocity.y))
-                {
-                    _direction = FacingDirection.Side;
-
-                    _facingRight = velocity.x > 0;
-                }
+                if (velocity.y > 0)
+                    _direction = FacingDirection.Up;
                 else
-                {
-                    if (velocity.y > 0)
-                        _direction = FacingDirection.Up;
-                    else
-                        _direction = FacingDirection.Down;
-                }
-                _spriteRenderer.flipX = _direction == FacingDirection.Side && !_facingRight;
+                    _direction = FacingDirection.Down;
             }
+            _spriteRenderer.flipX = _direction == FacingDirection.Side && !_facingRight;
         }
 
         private bool IsMovingToward(FacingDirection direction, Vector2 velocity)

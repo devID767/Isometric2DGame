@@ -1,4 +1,5 @@
 using Isometric2DGame.Animations;
+using Isometric2DGame.Combat;
 using Isometric2DGame.Environment;
 using Isometric2DGame.Movement;
 using Isometric2DGame.StateMachines;
@@ -7,7 +8,7 @@ using UnityEngine;
 namespace Isometric2DGame.EnemyCharacter
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Enemy : MonoBehaviour, IPositionHolder
+    public class Enemy : MonoBehaviour, ITarget
     {
         [SerializeField] private PatrolRoute _patrolRoute;
         [SerializeField] private SpriteRenderer _spriteRenderer;
@@ -21,8 +22,11 @@ namespace Isometric2DGame.EnemyCharacter
         private CharacterMotor _motor;
         private CharacterAnimator _characterAnimator;
         private StateMachine _stateMachine;
+        private Health _health;
 
         public Vector2 Position => _rb.position;
+
+        public bool IsAlive => _health.IsAlive;
 
         private void Awake()
         {
@@ -30,6 +34,7 @@ namespace Isometric2DGame.EnemyCharacter
             _sensor = new PlayerSensor(this, _enemyConfig.Detection);
             _motor = new CharacterMotor(_rb, _moveConfig);
             _characterAnimator = new CharacterAnimator(_animator, _spriteRenderer);
+            _health = new Health(_enemyConfig.Health.Max);
 
             _stateMachine = CreateStateMachine();
         }
@@ -70,6 +75,8 @@ namespace Isometric2DGame.EnemyCharacter
 
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, _enemyConfig.Attack.Range);
+            Gizmos.color = Color.purple;
+            Gizmos.DrawWireSphere(transform.position, _enemyConfig.Attack.ExitRange);
         }
 
         private StateMachine CreateStateMachine()
@@ -91,7 +98,7 @@ namespace Isometric2DGame.EnemyCharacter
             stateMachine.AddTransition(patrol, chase, () => CanSee(detect));
             stateMachine.AddTransition(chase, attack, () => CanSee(_enemyConfig.Attack.Range));
             stateMachine.AddTransition(attack, chase, 
-                () => !_sensor.HasLineOfSight || _sensor.Distance > _enemyConfig.Attack.ExitRange);
+                () => !attack.Swinging && !CanSee(_enemyConfig.Attack.ExitRange));
             stateMachine.AddTransition(chase, search, () => !CanSee(lose));
             stateMachine.AddTransition(search, chase, () => CanSee(detect));
             stateMachine.AddTransition(search, idle, () => search.IsDone);
@@ -99,6 +106,11 @@ namespace Isometric2DGame.EnemyCharacter
             bool CanSee(float radius) => _sensor.CanSee(radius);
 
             return stateMachine;
+        }
+
+        public void TakeDamage(int value)
+        {
+            
         }
     }
 }
