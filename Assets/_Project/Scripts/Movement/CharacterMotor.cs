@@ -8,6 +8,8 @@ namespace Isometric2DGame.Movement
 
         private Vector2 _direction;
 
+        private float _speedScale = 1f;
+
         private readonly Rigidbody2D _rb;
         private readonly CharacterMoveConfig _config;
 
@@ -17,20 +19,22 @@ namespace Isometric2DGame.Movement
             _config = config;
         }
 
-        public void SetDirection(Vector2 direction)
+        public void SetDirection(Vector2 direction, float speedScale = 1f)
         {
             _direction = direction;
+            _speedScale = speedScale;
         }
 
         public void Reset()
         {
+            _speedScale = 1f;
             _direction = Vector2.zero;
             _rb.linearVelocity = Vector2.zero;
         }
 
         public void FixedTick()
         {
-            var target = _direction * _config.MaxSpeed;
+            var target = _direction * _config.MaxSpeed * _speedScale;
             _rb.linearVelocity = _config.InstantAcceleration
                 ? target
                 : Vector2.MoveTowards(_rb.linearVelocity, target, _config.Acceleration * Time.fixedDeltaTime);

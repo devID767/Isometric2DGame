@@ -10,12 +10,12 @@ namespace Isometric2DGame.EnemyCharacter
     public class PatrolEnemyState : ITickableState
     {
         private const float Threshold = 0.1f;
-        private const float PatrolPointTimeout = 15f;
 
         private readonly IPositionHolder _self;
         private readonly CharacterMotor _motor;
         private readonly PatrolRoute _route;
         private readonly CharacterAnimator _animator;
+        private readonly EnemyConfig.PatrolSettings _settings;
 
         private readonly Timer _patrolPointTimer;
 
@@ -23,14 +23,15 @@ namespace Isometric2DGame.EnemyCharacter
 
         private Vector2 _point;
 
-        public PatrolEnemyState(IPositionHolder self, CharacterMotor motor, PatrolRoute route, CharacterAnimator animator)
+        public PatrolEnemyState(IPositionHolder self, CharacterMotor motor, PatrolRoute route, CharacterAnimator animator, EnemyConfig.PatrolSettings settings)
         {
             _self = self;
             _motor = motor;
             _animator = animator;
             _route = route;
+            _settings = settings;
 
-            _patrolPointTimer = new Timer(PatrolPointTimeout);
+            _patrolPointTimer = new Timer(_settings.PointTimeout);
         }
 
         public void Enter()

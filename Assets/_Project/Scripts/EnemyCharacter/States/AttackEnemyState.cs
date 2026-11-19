@@ -14,10 +14,10 @@ namespace Isometric2DGame.EnemyCharacter
         private readonly IPositionHolder _self;
         private readonly PlayerSensor _sensor;
 
-        public AttackEnemyState(IPositionHolder self, PlayerSensor sensor, float damage, float attackCD, CharacterAnimator animator)
+        public AttackEnemyState(EnemyConfig.AttackSettings settings, IPositionHolder self, PlayerSensor sensor, CharacterAnimator animator)
         {
-            _damage = damage;
-            _attackCooldown = new Timer(attackCD);
+            _damage = settings.Damage;
+            _attackCooldown = new Timer(settings.Cooldown);
             _animator = animator;
             _self = self; 
             _sensor = sensor;
