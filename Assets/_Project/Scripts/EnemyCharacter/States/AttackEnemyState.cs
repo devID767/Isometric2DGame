@@ -2,7 +2,6 @@ using Isometric2DGame.Animations;
 using Isometric2DGame.Combat;
 using Isometric2DGame.Infrastructure;
 using Isometric2DGame.StateMachines;
-using UnityEngine;
 
 namespace Isometric2DGame.EnemyCharacter
 {
@@ -61,11 +60,6 @@ namespace Isometric2DGame.EnemyCharacter
             if (_sensor.CanSee(_settings.ExitRange))
             {
                 _sensor.Target.TakeDamage(_settings.Damage);
-                Debug.Log($"Attacking with damage {_settings.Damage}");
-            }
-            else
-            {
-                Debug.Log($"Miss attack");
             }
         }
     }

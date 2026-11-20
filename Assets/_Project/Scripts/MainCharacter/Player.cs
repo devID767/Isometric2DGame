@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Isometric2DGame.MainCharacter
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Player : MonoBehaviour, ITarget
+    public class Player : MonoBehaviour, ITarget, IHealthOwner
     {
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private Animator _animator;
@@ -24,7 +24,9 @@ namespace Isometric2DGame.MainCharacter
 
         public Vector2 Position => _rb.position;
 
-        public bool IsAlive => _health.IsAlive;
+        public bool IsAlive => _health.Data.IsAlive;
+
+        public IReadOnlyHealth Health => _health;
 
         private void Awake()
         {

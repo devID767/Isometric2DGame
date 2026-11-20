@@ -9,14 +9,14 @@ namespace Isometric2DGame.EnemyCharacter
     {
         private readonly EnemyConfig.HurtSettings _settings;
         private readonly CharacterAnimator _animator;
-        private readonly Health _health;
+        private readonly IReadOnlyHealth _health;
 
         private readonly CooldownTimer _durationTimer;
 
         public bool IsTriggered { get; private set; }
         public bool IsDone => _durationTimer.IsDone;
 
-        public HurtEnemyState(EnemyConfig.HurtSettings settings, CharacterAnimator animator, Health health)
+        public HurtEnemyState(EnemyConfig.HurtSettings settings, CharacterAnimator animator, IReadOnlyHealth health)
         {
             _settings = settings;
             _animator = animator;
@@ -46,7 +46,7 @@ namespace Isometric2DGame.EnemyCharacter
 
         private void OnDamaged()
         {
-            if(_health.IsAlive)
+            if(_health.Data.IsAlive)
                 IsTriggered = true;
             else IsTriggered = false;
         }

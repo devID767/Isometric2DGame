@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Isometric2DGame.EnemyCharacter
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Enemy : MonoBehaviour, ITarget
+    public class Enemy : MonoBehaviour, ITarget, IHealthOwner
     {
         [SerializeField] private PatrolRoute _patrolRoute;
         [SerializeField] private SpriteRenderer _spriteRenderer;
@@ -26,7 +26,9 @@ namespace Isometric2DGame.EnemyCharacter
 
         public Vector2 Position => _rb.position;
 
-        public bool IsAlive => _health.IsAlive;
+        public bool IsAlive => _health.Data.IsAlive;
+
+        public IReadOnlyHealth Health => _health;
 
         private void Awake()
         {
@@ -114,7 +116,7 @@ namespace Isometric2DGame.EnemyCharacter
             var detect = _enemyConfig.Detection.DetectRadius;
             var lose = _enemyConfig.Detection.LoseRadius;
 
-            stateMachine.AddAnyTransition(dead, () => !_health.IsAlive);
+            stateMachine.AddAnyTransition(dead, () => !_health.Data.IsAlive);
             stateMachine.AddAnyTransition(hurt, () => hurt.IsTriggered, canTransitionToSelf: true);
             stateMachine.AddTransition(hurt, chase, () => hurt.IsDone && CanSee(lose));
             stateMachine.AddTransition(hurt, idle, () => hurt.IsDone);

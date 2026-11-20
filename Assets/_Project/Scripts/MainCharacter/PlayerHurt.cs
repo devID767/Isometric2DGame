@@ -7,13 +7,13 @@ namespace Isometric2DGame.MainCharacter
     public class PlayerHurt
     {
         private readonly CooldownTimer _timer;
-        private readonly Health _health;
+        private readonly IReadOnlyHealth _health;
         private readonly CharacterAnimator _animator;
         private readonly PlayerMeleeAttack _attack;
 
         public bool IsActive => !_timer.IsDone;
 
-        public PlayerHurt(float duration, Health health, CharacterAnimator animator, PlayerMeleeAttack attack)
+        public PlayerHurt(float duration, IReadOnlyHealth health, CharacterAnimator animator, PlayerMeleeAttack attack)
         {
             _timer = new CooldownTimer(duration);
 
@@ -32,7 +32,7 @@ namespace Isometric2DGame.MainCharacter
 
         private void OnDamaged()
         {
-            if(!_health.IsAlive)
+            if(!_health.Data.IsAlive)
                 return;
 
             _timer.Reset();
