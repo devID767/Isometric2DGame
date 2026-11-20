@@ -17,7 +17,7 @@ namespace Isometric2DGame.EnemyCharacter
         private readonly CharacterAnimator _animator;
         private readonly EnemyConfig.PatrolSettings _settings;
 
-        private readonly Timer _patrolPointTimer;
+        private readonly CooldownTimer _patrolPointTimer;
 
         public bool IsArrived { get; private set; }
 
@@ -31,7 +31,7 @@ namespace Isometric2DGame.EnemyCharacter
             _route = route;
             _settings = settings;
 
-            _patrolPointTimer = new Timer(_settings.PointTimeout);
+            _patrolPointTimer = new CooldownTimer(_settings.PointTimeout);
         }
 
         public void Enter()

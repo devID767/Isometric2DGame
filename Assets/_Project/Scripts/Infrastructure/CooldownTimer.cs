@@ -1,6 +1,6 @@
 namespace Isometric2DGame.Infrastructure
 {
-    public class Timer
+    public class CooldownTimer
     {
         private readonly float _initTime;
 
@@ -8,7 +8,7 @@ namespace Isometric2DGame.Infrastructure
 
         public bool IsDone => _currentTime <= 0;
 
-        public Timer(float time)
+        public CooldownTimer(float time)
         {
             _initTime = time;
             _currentTime = time;

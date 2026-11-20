@@ -16,9 +16,9 @@ namespace Isometric2DGame.EnemyCharacter
         private readonly CharacterMotor _motor;
         private readonly EnemyConfig.SearchSettings _settings;
 
-        private readonly Timer _holdTimer;
-        private readonly Timer _extraTimer;
-        private readonly Timer _holdAnimationTimer;
+        private readonly CooldownTimer _holdTimer;
+        private readonly CooldownTimer _extraTimer;
+        private readonly CooldownTimer _holdAnimationTimer;
 
         private bool _lastRotationIsRight;
 
@@ -34,9 +34,9 @@ namespace Isometric2DGame.EnemyCharacter
             _motor = motor;
             _settings = settings;
 
-            _holdTimer = new Timer(_settings.HoldTime);
-            _holdAnimationTimer = new Timer(_settings.HoldTime / _settings.LookCount);
-            _extraTimer = new Timer(_settings.Timeout);
+            _holdTimer = new CooldownTimer(_settings.HoldTime);
+            _holdAnimationTimer = new CooldownTimer(_settings.HoldTime / _settings.LookCount);
+            _extraTimer = new CooldownTimer(_settings.Timeout);
         }
 
         public void Enter()

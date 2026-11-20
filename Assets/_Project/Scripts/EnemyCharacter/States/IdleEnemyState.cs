@@ -4,16 +4,17 @@ using Isometric2DGame.StateMachines;
 
 namespace Isometric2DGame.EnemyCharacter
 {
+
     public class IdleEnemyState : ITickableState
     {
-        private readonly Timer _timer;
+        private readonly CooldownTimer _timer;
         private readonly CharacterAnimator _animator;
 
         public bool IsDone => _timer.IsDone;
 
         public IdleEnemyState(float time, CharacterAnimator animator)
         {
-            _timer = new Timer(time);
+            _timer = new CooldownTimer(time);
             _animator = animator;
         }
 

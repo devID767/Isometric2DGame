@@ -28,9 +28,9 @@ namespace Isometric2DGame.Combat
 
         private readonly SwingSettings _settings;
 
-        private readonly Timer _cooldown;
-        private readonly Timer _hitDelay;
-        private readonly Timer _swingTimer;
+        private readonly CooldownTimer _cooldown;
+        private readonly CooldownTimer _hitDelay;
+        private readonly CooldownTimer _swingTimer;
 
         public bool Swinging { get; private set; }
 
@@ -40,9 +40,9 @@ namespace Isometric2DGame.Combat
         {
             _settings = settings;
 
-            _cooldown = new Timer(_settings.Cooldown);
-            _hitDelay = new Timer(_settings.HitDelay);
-            _swingTimer = new Timer(_settings.Duration);
+            _cooldown = new CooldownTimer(_settings.Cooldown);
+            _hitDelay = new CooldownTimer(_settings.HitDelay);
+            _swingTimer = new CooldownTimer(_settings.Duration);
         }
 
         public bool TryStart()
