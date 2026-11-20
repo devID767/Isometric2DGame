@@ -20,7 +20,7 @@ namespace Isometric2DGame.MainCharacter
             [field: Min(0)]
             [field: SerializeField] public float Radius { get; private set; } = 0.35f;
 
-            [field: SerializeField] public Combat.Swing.SwingSettings Swing { get; private set; } = new ();
+            [field: SerializeField] public Combat.Swing.SwingSettings Swing { get; private set; } = new();
 
             [field: SerializeField] public LayerMask Enemy { get; private set; }
 
@@ -30,11 +30,21 @@ namespace Isometric2DGame.MainCharacter
             }
         }
 
+        [Serializable]
+        public class HurtSettings
+        {
+            [field: Min(0.01f)]
+            [field: SerializeField] public float Duration { get; private set; } = 0.25f;
+            [field: Min(0)]
+            [field: SerializeField] public float InvulnerableDuration {get; private set;} = 0.5f;
+            [field: Min(0)]
+            [field: SerializeField] public float PushSpeed {get; private set;} = 5f;
+        }
+
         [field: Min(1)]
         [field: SerializeField] public int MaxHP { get; private set; } = 10;
-        [field: Min(0)]
-        [field: SerializeField] public float HurtDuration { get; private set; } = 0.25f;
-        [field: SerializeField] public AttackSettings Attack { get; private set; } = new ();
+        [field: SerializeField] public AttackSettings Attack { get; private set; } = new();
+        [field: SerializeField] public HurtSettings Hurt { get; private set; } = new();
 
         void OnValidate()
         {

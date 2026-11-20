@@ -24,7 +24,6 @@ namespace Isometric2DGame.EnemyCharacter
             _sensor = sensor;
 
             _swing = new Swing(settings.Swing);
-            _animator.SetDuration(CharacterAction.Attack, _settings.Swing.Duration);
         }
 
         public void Enter()
@@ -59,7 +58,7 @@ namespace Isometric2DGame.EnemyCharacter
         {
             if (_sensor.CanSee(_settings.ExitRange))
             {
-                _sensor.Target.TakeDamage(_settings.Damage);
+                _sensor.Target.TakeDamage(new DamageInfo(_settings.Damage, _self.Position));
             }
         }
     }

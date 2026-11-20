@@ -41,5 +41,6 @@ MonoBehaviour:
     <LookCount>k__BackingField: 6
   <Hurt>k__BackingField:
     <Duration>k__BackingField: 0.3
+    <PushSpeed>k__BackingField: 3
   <Health>k__BackingField:
     <Max>k__BackingField: 3

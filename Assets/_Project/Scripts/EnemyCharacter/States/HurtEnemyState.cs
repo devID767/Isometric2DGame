@@ -1,6 +1,7 @@
 using Isometric2DGame.Animations;
 using Isometric2DGame.Combat;
 using Isometric2DGame.Infrastructure;
+using Isometric2DGame.Movement;
 using Isometric2DGame.StateMachines;
 
 namespace Isometric2DGame.EnemyCharacter
@@ -8,22 +9,25 @@ namespace Isometric2DGame.EnemyCharacter
     public class HurtEnemyState : ITickableState
     {
         private readonly EnemyConfig.HurtSettings _settings;
+        private readonly IPositionHolder _self;
         private readonly CharacterAnimator _animator;
         private readonly IReadOnlyHealth _health;
+        private readonly Knockback _knockback;
 
         private readonly CooldownTimer _durationTimer;
 
         public bool IsTriggered { get; private set; }
         public bool IsDone => _durationTimer.IsDone;
 
-        public HurtEnemyState(EnemyConfig.HurtSettings settings, CharacterAnimator animator, IReadOnlyHealth health)
+        public HurtEnemyState(EnemyConfig.HurtSettings settings, IPositionHolder self, CharacterAnimator animator, IReadOnlyHealth health, Knockback knockback)
         {
             _settings = settings;
+            _self = self;
             _animator = animator;
             _health = health;
+            _knockback = knockback;
 
             _durationTimer = new CooldownTimer(_settings.Duration);
-            _animator.SetDuration(CharacterAction.Hurt, _settings.Duration);
 
             _health.Damaged += OnDamaged;
         }
@@ -44,11 +48,13 @@ namespace Isometric2DGame.EnemyCharacter
         {
         }
 
-        private void OnDamaged()
+        private void OnDamaged(DamageInfo info)
         {
-            if(_health.Data.IsAlive)
-                IsTriggered = true;
-            else IsTriggered = false;
+            if (!_health.Data.IsAlive)
+                return;
+                
+            _knockback.Apply(info.DirectionTo(_self.Position) * _settings.PushSpeed);
+            IsTriggered = true;
         }
     }
 }

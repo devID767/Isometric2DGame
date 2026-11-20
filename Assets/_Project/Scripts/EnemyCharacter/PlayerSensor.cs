@@ -33,7 +33,7 @@ namespace Isometric2DGame.EnemyCharacter
         {
             var found = IsPlayerNearby(_loseRadius, out ITarget target);
 
-            HasTarget = found && target.IsAlive;
+            HasTarget = found && target.Health.Data.IsAlive;
 
             if (HasTarget)
             {

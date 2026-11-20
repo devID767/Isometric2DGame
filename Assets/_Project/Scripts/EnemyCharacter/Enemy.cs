@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Isometric2DGame.EnemyCharacter
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Enemy : MonoBehaviour, ITarget, IHealthOwner
+    public class Enemy : MonoBehaviour, ITarget
     {
         [SerializeField] private PatrolRoute _patrolRoute;
         [SerializeField] private SpriteRenderer _spriteRenderer;
@@ -24,9 +24,9 @@ namespace Isometric2DGame.EnemyCharacter
         private StateMachine _stateMachine;
         private Health _health;
 
-        public Vector2 Position => _rb.position;
+        private Knockback _knockback;
 
-        public bool IsAlive => _health.Data.IsAlive;
+        public Vector2 Position => _rb.position;
 
         public IReadOnlyHealth Health => _health;
 
@@ -38,7 +38,15 @@ namespace Isometric2DGame.EnemyCharacter
             _characterAnimator = new CharacterAnimator(_animator, _spriteRenderer);
             _health = new Health(_enemyConfig.Health.Max);
 
-            _stateMachine = CreateStateMachine();
+            var chaseBoost = new SpeedScale();
+            _knockback = new Knockback(_enemyConfig.Hurt.PushSpeed / _enemyConfig.Hurt.Duration);
+            _motor.AddModifier(chaseBoost);
+            _motor.AddModifier(_knockback);
+
+            _stateMachine = CreateStateMachine(chaseBoost);
+
+            _characterAnimator.SetDuration(CharacterAction.Hurt, _enemyConfig.Hurt.Duration);
+            _characterAnimator.SetDuration(CharacterAction.Attack, _enemyConfig.Attack.Swing.Duration);
         }
 
         private void OnEnable()
@@ -48,16 +56,14 @@ namespace Isometric2DGame.EnemyCharacter
             _characterAnimator.Reset();
             _stateMachine.Restart();
             _health.Reset();
+            _knockback.Reset();
 
             _health.Died += OnDied;
         }
 
-        public void TakeDamage(int value)
+        public void TakeDamage(DamageInfo info)
         {
-            if (!IsAlive)
-                return;
-
-            _health.TakeDamage(value);
+            _health.TakeDamage(info);
         }
 
         private void OnDied()
@@ -101,14 +107,14 @@ namespace Isometric2DGame.EnemyCharacter
             Gizmos.DrawWireSphere(transform.position, _enemyConfig.Attack.ExitRange);
         }
 
-        private StateMachine CreateStateMachine()
+        private StateMachine CreateStateMachine(SpeedScale chaseBoost)
         {
             var idle = new IdleEnemyState(_enemyConfig.Idle.HoldTime, _characterAnimator);
             var patrol = new PatrolEnemyState(this, _motor, _patrolRoute, _characterAnimator, _enemyConfig.Patrol);
-            var chase = new ChaseEnemyState(this, _motor, _sensor, _characterAnimator, _enemyConfig.Chase);
+            var chase = new ChaseEnemyState(this, _motor, _sensor, _characterAnimator, _enemyConfig.Chase, chaseBoost);
             var search = new SearchEnemyState(this, _sensor, _characterAnimator, _motor, _enemyConfig.Search);
             var attack = new AttackEnemyState(_enemyConfig.Attack, this, _sensor, _characterAnimator);
-            var hurt = new HurtEnemyState(_enemyConfig.Hurt, _characterAnimator, _health);
+            var hurt = new HurtEnemyState(_enemyConfig.Hurt, this, _characterAnimator, _health, _knockback);
             var dead = new DeadEnemyState(_characterAnimator);
 
             var stateMachine = new StateMachine(idle);

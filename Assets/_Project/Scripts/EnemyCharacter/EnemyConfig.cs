@@ -86,8 +86,10 @@ namespace Isometric2DGame.EnemyCharacter
         [Serializable]
         public class HurtSettings
         {
-            [field: Min(0)]
+            [field: Min(0.01f)]
             [field: SerializeField] public float Duration { get; private set; } = 0.3f;
+            [field: Min(0)]
+            [field: SerializeField] public float PushSpeed { get; private set; } = 5f;
         }
 
         [field: SerializeField] public DetectionSettings Detection { get; private set; } = new();

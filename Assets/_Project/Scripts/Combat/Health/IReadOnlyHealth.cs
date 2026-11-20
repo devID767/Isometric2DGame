@@ -6,6 +6,6 @@ namespace Isometric2DGame.Combat
     {
         public HealthData Data { get; }
         public event Action<HealthData> Changed;
-        public event Action Damaged;
+        public event Action<DamageInfo> Damaged;
     }
 }
