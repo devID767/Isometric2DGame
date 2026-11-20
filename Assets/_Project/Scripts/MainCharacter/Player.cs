@@ -20,6 +20,7 @@ namespace Isometric2DGame.MainCharacter
         private CharacterAnimator _characterAnimator;
         private Health _health;
         private PlayerMeleeAttack _attack;
+        private PlayerHurt _hurt;
 
         public Vector2 Position => _rb.position;
 
@@ -36,6 +37,8 @@ namespace Isometric2DGame.MainCharacter
 
             _attack = new PlayerMeleeAttack(this, _combatConfig.Attack);
             _characterAnimator.SetDuration(CharacterAction.Attack, _combatConfig.Attack.Swing.Duration);
+
+            _hurt = new PlayerHurt(_combatConfig.HurtDuration, _health, _characterAnimator, _attack);
         }
 
         private void OnEnable()
@@ -46,11 +49,23 @@ namespace Isometric2DGame.MainCharacter
             _attack.Reset();
 
             _health.Died += OnDied;
+
+            _hurt.Enable();
+
+            _rb.simulated = true;
         }
 
         private void Update()
         {
             _attack.Tick(Time.deltaTime);
+            _hurt.Tick(Time.deltaTime);
+
+            if (_hurt.IsActive)
+            {
+                _motor.SetDirection(Vector2.zero);
+                return;
+            }
+
             if (_inputReader.AttackPressed && _attack.TryStart(_characterAnimator.GetFacing()))
             {
                 _characterAnimator.PlayAnimation(CharacterAction.Attack, restart: true);
@@ -75,19 +90,21 @@ namespace Isometric2DGame.MainCharacter
 
         private void OnDied()
         {
+            _characterAnimator.PlayAnimation(CharacterAction.Death);
             enabled = false;
+            _rb.simulated = false;
         }
 
         public void TakeDamage(int value)
         {
             _health.TakeDamage(value);
-            Debug.Log($"Take damage{value}");
         }
 
         private void OnDisable()
         {
             _inputReader.Disable();
             _motor.Reset();
+            _hurt.Disable();
 
             _health.Died -= OnDied;
         }

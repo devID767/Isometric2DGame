@@ -32,6 +32,8 @@ namespace Isometric2DGame.MainCharacter
 
         [field: Min(1)]
         [field: SerializeField] public int MaxHP { get; private set; } = 10;
+        [field: Min(0)]
+        [field: SerializeField] public float HurtDuration { get; private set; } = 0.25f;
         [field: SerializeField] public AttackSettings Attack { get; private set; } = new ();
 
         void OnValidate()
