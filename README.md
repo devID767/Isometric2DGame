@@ -55,6 +55,7 @@ More details in [docs/PLAN.md](docs/PLAN.md#decisions).
 
 ## Assets
 - [Voxel Dungeon Pack](https://colefoster.itch.io/voxel-dungeon-pack) and [Voxel Crypt Pack](https://colefoster.itch.io/voxel-crypt-pack) by Cole Foster, CC0 1.0. Characters, props, effects and tiles. License files are in `Assets/_Project/Art/ThirdParty/ColeFoster/`. According to the pack README, the sprites are rendered by a generator whose code was written with AI coding agents; no image-generation model was used.
+- [Hearthmark: Pixel RPG UI](https://colefoster.itch.io/hearthmark-rpg-ui) by Cole Foster, CC0 1.0. UI panels, buttons, health bar and the pixel font. Only the used files are included, the license is in `Assets/_Project/Art/ThirdParty/ColeFoster/Hearthmark/`.
 
 ## AI usage
 I discussed architecture with AI and used it for research, code review and git housekeeping. All gameplay code was written by me. Editor tooling, sprite import settings, animation clips, prefabs and the test level layout were set up with AI assistance.
