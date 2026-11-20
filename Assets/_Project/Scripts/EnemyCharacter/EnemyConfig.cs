@@ -83,12 +83,20 @@ namespace Isometric2DGame.EnemyCharacter
             [field: SerializeField] public int Max { get; private set; } = 5;
         }
 
+        [Serializable]
+        public class HurtSettings
+        {
+            [field: Min(0)]
+            [field: SerializeField] public float Duration { get; private set; } = 0.3f;
+        }
+
         [field: SerializeField] public DetectionSettings Detection { get; private set; } = new();
         [field: SerializeField] public IdleSettings Idle { get; private set; } = new();
         [field: SerializeField] public PatrolSettings Patrol { get; private set; } = new();
         [field: SerializeField] public ChaseSettings Chase { get; private set; } = new();
         [field: SerializeField] public AttackSettings Attack { get; private set; } = new();
         [field: SerializeField] public SearchSettings Search { get; private set; } = new();
+        [field: SerializeField] public HurtSettings Hurt { get; private set; } = new();
 
         [field: Space]
         [field: SerializeField] public HealthSettings Health { get; private set; } = new();

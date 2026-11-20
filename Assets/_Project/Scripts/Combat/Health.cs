@@ -11,6 +11,7 @@ namespace Isometric2DGame.Combat
         public bool IsAlive => Current > 0;
 
         public event Action Changed;
+        public event Action Damaged;
         public event Action Died;
 
         public Health(int max)
@@ -25,6 +26,7 @@ namespace Isometric2DGame.Combat
                 return;
 
             Current = Mathf.Max(0, Current - value);
+            Damaged?.Invoke();
             Changed?.Invoke();
 
             if (Current == 0)

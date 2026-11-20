@@ -41,6 +41,8 @@ namespace Isometric2DGame.EnemyCharacter
 
         private void OnEnable()
         {
+            _rb.simulated = true;
+
             _characterAnimator.Reset();
             _stateMachine.Restart();
             _health.Reset();
@@ -48,9 +50,17 @@ namespace Isometric2DGame.EnemyCharacter
             _health.Died += OnDied;
         }
 
+        public void TakeDamage(int value)
+        {
+            if (!IsAlive)
+                return;
+
+            _health.TakeDamage(value);
+        }
+
         private void OnDied()
         {
-            gameObject.SetActive(false);
+            _rb.simulated = false;
         }
 
         private void Update()
@@ -96,18 +106,25 @@ namespace Isometric2DGame.EnemyCharacter
             var chase = new ChaseEnemyState(this, _motor, _sensor, _characterAnimator, _enemyConfig.Chase);
             var search = new SearchEnemyState(this, _sensor, _characterAnimator, _motor, _enemyConfig.Search);
             var attack = new AttackEnemyState(_enemyConfig.Attack, this, _sensor, _characterAnimator);
+            var hurt = new HurtEnemyState(_enemyConfig.Hurt, _characterAnimator, _health);
+            var dead = new DeadEnemyState(_characterAnimator);
 
             var stateMachine = new StateMachine(idle);
 
             var detect = _enemyConfig.Detection.DetectRadius;
             var lose = _enemyConfig.Detection.LoseRadius;
 
+            stateMachine.AddAnyTransition(dead, () => !_health.IsAlive);
+            stateMachine.AddAnyTransition(hurt, () => hurt.IsTriggered, canTransitionToSelf: true);
+            stateMachine.AddTransition(hurt, chase, () => hurt.IsDone && CanSee(lose));
+            stateMachine.AddTransition(hurt, idle, () => hurt.IsDone);
+
             stateMachine.AddTransition(idle, patrol, () => idle.IsDone);
             stateMachine.AddTransition(patrol, idle, () => patrol.IsArrived);
             stateMachine.AddTransition(idle, chase, () => CanSee(detect));
             stateMachine.AddTransition(patrol, chase, () => CanSee(detect));
             stateMachine.AddTransition(chase, attack, () => CanSee(_enemyConfig.Attack.Range));
-            stateMachine.AddTransition(attack, chase, 
+            stateMachine.AddTransition(attack, chase,
                 () => !attack.Swinging && !CanSee(_enemyConfig.Attack.ExitRange));
             stateMachine.AddTransition(chase, search, () => !CanSee(lose));
             stateMachine.AddTransition(search, chase, () => CanSee(detect));
@@ -116,12 +133,6 @@ namespace Isometric2DGame.EnemyCharacter
             bool CanSee(float radius) => _sensor.CanSee(radius);
 
             return stateMachine;
-        }
-
-        public void TakeDamage(int value)
-        {
-            _health.TakeDamage(value);
-            Debug.Log("Enemy take damage");
         }
     }
 }
