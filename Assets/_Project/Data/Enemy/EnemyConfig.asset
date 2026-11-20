@@ -30,7 +30,7 @@ MonoBehaviour:
   <Attack>k__BackingField:
     <Damage>k__BackingField: 1
     <Range>k__BackingField: 0.4
-    <ExitRange>k__BackingField: 0.5
+    <ExitRange>k__BackingField: 0.6
     <Swing>k__BackingField:
       <HitDelay>k__BackingField: 0.25
       <Cooldown>k__BackingField: 0.9
@@ -39,5 +39,7 @@ MonoBehaviour:
     <HoldTime>k__BackingField: 3
     <Timeout>k__BackingField: 15
     <LookCount>k__BackingField: 6
+  <Hurt>k__BackingField:
+    <Duration>k__BackingField: 0.3
   <Health>k__BackingField:
     <Max>k__BackingField: 3
