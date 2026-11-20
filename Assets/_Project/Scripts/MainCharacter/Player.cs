@@ -1,4 +1,3 @@
-using System;
 using Isometric2DGame.Animations;
 using Isometric2DGame.Combat;
 using Isometric2DGame.Movement;
@@ -21,7 +20,7 @@ namespace Isometric2DGame.MainCharacter
         private CharacterAnimator _characterAnimator;
         private Health _health;
         private PlayerMeleeAttack _attack;
-        private PlayerHitReaction _hurt;
+        private PlayerHitReaction _hitReaction;
 
         public Vector2 Position => _rb.position;
 
@@ -44,7 +43,7 @@ namespace Isometric2DGame.MainCharacter
             _attack = new PlayerMeleeAttack(this, _combatConfig.Attack, attackSlow);
             _characterAnimator.SetDuration(CharacterAction.Attack, _combatConfig.Attack.Swing.Duration);
 
-            _hurt = new PlayerHitReaction(this, _combatConfig.Hurt, knockback, _characterAnimator, _health);
+            _hitReaction = new PlayerHitReaction(this, _combatConfig.Hurt, knockback, _characterAnimator, _health);
             _characterAnimator.SetDuration(CharacterAction.Hurt, _combatConfig.Hurt.Duration);
         }
 
@@ -55,7 +54,7 @@ namespace Isometric2DGame.MainCharacter
             _characterAnimator.Reset();
             _attack.Reset();
 
-            _hurt.Enable();
+            _hitReaction.Enable();
 
             _rb.simulated = true;
 
@@ -71,9 +70,9 @@ namespace Isometric2DGame.MainCharacter
         private void Update()
         {
             _attack.Tick(Time.deltaTime);
-            _hurt.Tick(Time.deltaTime);
+            _hitReaction.Tick(Time.deltaTime);
 
-            if (_hurt.IsActive)
+            if (_hitReaction.IsActive)
             {
                 _motor.SetDirection(Vector2.zero);
                 return;
@@ -104,7 +103,7 @@ namespace Isometric2DGame.MainCharacter
 
         public void TakeDamage(DamageInfo info)
         {
-            if (_hurt.IsInvulnerable)
+            if (_hitReaction.IsInvulnerable)
                 return;
 
             _health.TakeDamage(info);
@@ -114,7 +113,7 @@ namespace Isometric2DGame.MainCharacter
         {
             _inputReader.Disable();
             _motor.Reset();
-            _hurt.Disable();
+            _hitReaction.Disable();
 
             _health.Died -= OnDied;
             _health.Damaged -= OnDamaged;
