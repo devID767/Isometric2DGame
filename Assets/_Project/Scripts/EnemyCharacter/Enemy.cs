@@ -14,7 +14,6 @@ namespace Isometric2DGame.EnemyCharacter
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private Animator _animator;
         [SerializeField] private CharacterMoveConfig _moveConfig;
-
         [SerializeField] private EnemyConfig _enemyConfig;
 
         private Rigidbody2D _rb;
