@@ -26,7 +26,7 @@ MonoBehaviour:
   <Patrol>k__BackingField:
     <PointTimeout>k__BackingField: 15
   <Chase>k__BackingField:
-    <SpeedMultiplier>k__BackingField: 1.25
+    <SpeedMultiplier>k__BackingField: 1.4
   <Attack>k__BackingField:
     <Damage>k__BackingField: 2
     <Range>k__BackingField: 0.4

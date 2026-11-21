@@ -16,8 +16,8 @@ MonoBehaviour:
   <Attack>k__BackingField:
     <Damage>k__BackingField: 3
     <MoveSpeedScale>k__BackingField: 0.5
-    <Offset>k__BackingField: 0.3
-    <Radius>k__BackingField: 0.25
+    <Offset>k__BackingField: 0.2
+    <Radius>k__BackingField: 0.4
     <Swing>k__BackingField:
       <HitDelay>k__BackingField: 0.15
       <Cooldown>k__BackingField: 0.5
@@ -26,7 +26,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 256
   <Projectile>k__BackingField:
-    <Damage>k__BackingField: 2
+    <Damage>k__BackingField: 1
     <Interval>k__BackingField: 1.5
     <Range>k__BackingField: 4
     <Speed>k__BackingField: 8
