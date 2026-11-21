@@ -1,5 +1,6 @@
 using Isometric2DGame.Animations;
 using Isometric2DGame.Combat;
+using Isometric2DGame.Combat.Projectiles;
 using Isometric2DGame.Movement;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ namespace Isometric2DGame.MainCharacter
     [RequireComponent(typeof(Rigidbody2D))]
     public class Player : MonoBehaviour, ITarget
     {
+        [SerializeField] private Transform _shootPoint;
+
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private Animator _animator;
         [SerializeField] private CharacterMoveConfig _moveConfig;
@@ -20,6 +23,7 @@ namespace Isometric2DGame.MainCharacter
         private CharacterAnimator _characterAnimator;
         private Health _health;
         private PlayerMeleeAttack _attack;
+        private ProjectileCaster _projectileCaster;
         private PlayerHitReaction _hitReaction;
 
         public Vector2 Position => _rb.position;
@@ -45,6 +49,8 @@ namespace Isometric2DGame.MainCharacter
 
             _hitReaction = new PlayerHitReaction(this, _combatConfig.Hurt, knockback, _characterAnimator, _health);
             _characterAnimator.SetDuration(CharacterAction.Hurt, _combatConfig.Hurt.Duration);
+
+            _projectileCaster = new ProjectileCaster(_shootPoint, _combatConfig.Projectile);
         }
 
         private void OnEnable()
@@ -69,6 +75,7 @@ namespace Isometric2DGame.MainCharacter
 
         private void Update()
         {
+            _projectileCaster.Tick(Time.deltaTime);
             _attack.Tick(Time.deltaTime);
             _hitReaction.Tick(Time.deltaTime);
 
@@ -132,6 +139,9 @@ namespace Isometric2DGame.MainCharacter
                 var center = Position + _characterAnimator.GetFacing() * _combatConfig.Attack.Offset;
                 Gizmos.DrawWireSphere(center, _combatConfig.Attack.Radius);
             }
+
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(_shootPoint.position, _combatConfig.Projectile.Range);
         }
     }
 }
