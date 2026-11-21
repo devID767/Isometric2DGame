@@ -16,8 +16,8 @@ MonoBehaviour:
   <Attack>k__BackingField:
     <Damage>k__BackingField: 3
     <MoveSpeedScale>k__BackingField: 0.5
-    <Offset>k__BackingField: 0.2
-    <Radius>k__BackingField: 0.4
+    <Offset>k__BackingField: 0.1
+    <Radius>k__BackingField: 0.35
     <Swing>k__BackingField:
       <HitDelay>k__BackingField: 0.15
       <Cooldown>k__BackingField: 0.5
