@@ -7,10 +7,13 @@ namespace Isometric2DGame.StateMachines
         public IState To { get; }
         public Func<bool> Condition { get; }
 
-        public StateTransition(IState to, Func<bool> confition)
+        public bool CanTransitionToSelf { get; }
+
+        public StateTransition(IState to, Func<bool> confition, bool canTransitionToSlef = false)
         {
             To = to;
             Condition = confition;
+            CanTransitionToSelf = canTransitionToSlef;
         }
     }
 }

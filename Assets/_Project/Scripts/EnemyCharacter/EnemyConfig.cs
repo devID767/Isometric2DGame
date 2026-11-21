@@ -10,18 +10,20 @@ namespace Isometric2DGame.EnemyCharacter
         public class AttackSettings
         {
             [field: Min(0)]
-            [field: SerializeField] public float Damage { get; private set; } = 1f;
-            [field: Min(0)]
-            [field: SerializeField] public float Cooldown { get; private set; } = 0.67f;
+            [field: SerializeField] public int Damage { get; private set; } = 1;
             [field: Min(0)]
             [field: SerializeField] public float Range { get; private set; } = 0.4f;
             [field: Min(0)]
             [field: SerializeField] public float ExitRange { get; private set; } = 0.6f;
 
+            [field: SerializeField] public Combat.Swing.SwingSettings Swing { get; private set; } = new ();
+
             public void Validate()
             {
                 if (ExitRange < Range)
                     ExitRange = Range + 0.1f;
+
+                Swing.Validate();
             }
         }
 
@@ -74,12 +76,32 @@ namespace Isometric2DGame.EnemyCharacter
             [field: SerializeField] public float HoldTime { get; private set; } = 1f;
         }
 
+        [Serializable]
+        public class HealthSettings
+        {
+            [field: Min(0)]
+            [field: SerializeField] public int Max { get; private set; } = 5;
+        }
+
+        [Serializable]
+        public class HurtSettings
+        {
+            [field: Min(0.01f)]
+            [field: SerializeField] public float Duration { get; private set; } = 0.3f;
+            [field: Min(0)]
+            [field: SerializeField] public float PushSpeed { get; private set; } = 5f;
+        }
+
         [field: SerializeField] public DetectionSettings Detection { get; private set; } = new();
         [field: SerializeField] public IdleSettings Idle { get; private set; } = new();
         [field: SerializeField] public PatrolSettings Patrol { get; private set; } = new();
         [field: SerializeField] public ChaseSettings Chase { get; private set; } = new();
         [field: SerializeField] public AttackSettings Attack { get; private set; } = new();
         [field: SerializeField] public SearchSettings Search { get; private set; } = new();
+        [field: SerializeField] public HurtSettings Hurt { get; private set; } = new();
+
+        [field: Space]
+        [field: SerializeField] public HealthSettings Health { get; private set; } = new();
 
         private void OnValidate()
         {

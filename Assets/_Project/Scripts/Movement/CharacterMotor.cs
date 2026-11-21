@@ -1,14 +1,17 @@
+using System.Collections.Generic;
+using Isometric2DGame.Movement.Modifiers;
 using UnityEngine;
 
 namespace Isometric2DGame.Movement
 {
     public class CharacterMotor
     {
-        public Vector2 Velocity => _rb.linearVelocity;
+        private readonly List<IVelocityModifier> _modifiers;
+        private Vector2 _moveVelocity;
+
+        public Vector2 Velocity => _moveVelocity;
 
         private Vector2 _direction;
-
-        private float _speedScale = 1f;
 
         private readonly Rigidbody2D _rb;
         private readonly CharacterMoveConfig _config;
@@ -17,27 +20,39 @@ namespace Isometric2DGame.Movement
         {
             _rb = rb;
             _config = config;
+
+            _modifiers = new List<IVelocityModifier>();
         }
 
-        public void SetDirection(Vector2 direction, float speedScale = 1f)
+        public void SetDirection(Vector2 direction)
         {
             _direction = direction;
-            _speedScale = speedScale;
+        }
+
+        public void AddModifier(IVelocityModifier m)
+        {
+            _modifiers.Add(m);
         }
 
         public void Reset()
         {
-            _speedScale = 1f;
             _direction = Vector2.zero;
-            _rb.linearVelocity = Vector2.zero;
+            _moveVelocity = Vector2.zero;
         }
 
         public void FixedTick()
         {
-            var target = _direction * _config.MaxSpeed * _speedScale;
-            _rb.linearVelocity = _config.InstantAcceleration
+            var target = _direction * _config.MaxSpeed;
+            _moveVelocity = _config.InstantAcceleration
                 ? target
-                : Vector2.MoveTowards(_rb.linearVelocity, target, _config.Acceleration * Time.fixedDeltaTime);
+                : Vector2.MoveTowards(_moveVelocity, target, _config.Acceleration * Time.fixedDeltaTime);
+
+            var velocity = _moveVelocity;
+            foreach (var m in _modifiers)
+            {
+                velocity = m.Modify(velocity, Time.fixedDeltaTime);
+            }
+            _rb.linearVelocity = velocity;
         }
     }
 }

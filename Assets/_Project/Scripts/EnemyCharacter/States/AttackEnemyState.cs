@@ -1,31 +1,34 @@
 using Isometric2DGame.Animations;
+using Isometric2DGame.Combat;
 using Isometric2DGame.Infrastructure;
-using Isometric2DGame.Movement;
 using Isometric2DGame.StateMachines;
-using UnityEngine;
 
-namespace Isometric2DGame.EnemyCharacter
+namespace Isometric2DGame.EnemyCharacter.States
 {
     public class AttackEnemyState : ITickableState
     {
-        private readonly Timer _attackCooldown;
-        private readonly float _damage;
         private readonly CharacterAnimator _animator;
         private readonly IPositionHolder _self;
         private readonly PlayerSensor _sensor;
+        private readonly EnemyConfig.AttackSettings _settings;
+
+        private readonly Swing _swing;
+
+        public bool Swinging => _swing.Swinging;
 
         public AttackEnemyState(EnemyConfig.AttackSettings settings, IPositionHolder self, PlayerSensor sensor, CharacterAnimator animator)
         {
-            _damage = settings.Damage;
-            _attackCooldown = new Timer(settings.Cooldown);
+            _settings = settings;
             _animator = animator;
-            _self = self; 
+            _self = self;
             _sensor = sensor;
+
+            _swing = new Swing(settings.Swing);
         }
 
         public void Enter()
         {
-            _attackCooldown.SetDone();
+            _swing.Reset();
         }
 
         public void Exit()
@@ -34,20 +37,29 @@ namespace Isometric2DGame.EnemyCharacter
 
         public void Tick(float deltaTime)
         {
-            _attackCooldown.Tick(deltaTime);
-
-            if (_attackCooldown.IsDone)
+            if (_swing.TryStart())
             {
-                Attack();
-                _attackCooldown.Reset();
+                PlayAnimation();
+            }
+
+            if (_swing.Tick(deltaTime))
+            {
+                TryHit();
             }
         }
 
-        private void Attack()
+        private void PlayAnimation()
         {
-            _animator.Face(_sensor.TargetPosition - _self.Position);
+            _animator.Face(_sensor.Target.Position - _self.Position);
             _animator.PlayAnimation(CharacterAction.Attack, true);
-            Debug.Log($"Attacking with damage {_damage}");
+        }
+
+        private void TryHit()
+        {
+            if (_sensor.CanSee(_settings.ExitRange))
+            {
+                _sensor.Target.TakeDamage(new DamageInfo(_settings.Damage, _self.Position));
+            }
         }
     }
 }

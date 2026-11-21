@@ -1,19 +1,22 @@
 using Isometric2DGame.Animations;
-using Isometric2DGame.Environment;
+using Isometric2DGame.Combat;
+using Isometric2DGame.Combat.Healths;
+using Isometric2DGame.EnemyCharacter.Patrol;
+using Isometric2DGame.EnemyCharacter.States;
 using Isometric2DGame.Movement;
+using Isometric2DGame.Movement.Modifiers;
 using Isometric2DGame.StateMachines;
 using UnityEngine;
 
 namespace Isometric2DGame.EnemyCharacter
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Enemy : MonoBehaviour, IPositionHolder
+    public class Enemy : MonoBehaviour, ITarget
     {
         [SerializeField] private PatrolRoute _patrolRoute;
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private Animator _animator;
         [SerializeField] private CharacterMoveConfig _moveConfig;
-
         [SerializeField] private EnemyConfig _enemyConfig;
 
         private Rigidbody2D _rb;
@@ -21,8 +24,13 @@ namespace Isometric2DGame.EnemyCharacter
         private CharacterMotor _motor;
         private CharacterAnimator _characterAnimator;
         private StateMachine _stateMachine;
+        private Health _health;
+
+        private Knockback _knockback;
 
         public Vector2 Position => _rb.position;
+
+        public IReadOnlyHealth Health => _health;
 
         private void Awake()
         {
@@ -30,14 +38,39 @@ namespace Isometric2DGame.EnemyCharacter
             _sensor = new PlayerSensor(this, _enemyConfig.Detection);
             _motor = new CharacterMotor(_rb, _moveConfig);
             _characterAnimator = new CharacterAnimator(_animator, _spriteRenderer);
+            _health = new Health(_enemyConfig.Health.Max);
 
-            _stateMachine = CreateStateMachine();
+            var chaseBoost = new SpeedScale();
+            _knockback = new Knockback(_enemyConfig.Hurt.PushSpeed / _enemyConfig.Hurt.Duration);
+            _motor.AddModifier(chaseBoost);
+            _motor.AddModifier(_knockback);
+
+            _stateMachine = CreateStateMachine(chaseBoost);
+
+            _characterAnimator.SetDuration(CharacterAction.Hurt, _enemyConfig.Hurt.Duration);
+            _characterAnimator.SetDuration(CharacterAction.Attack, _enemyConfig.Attack.Swing.Duration);
         }
 
         private void OnEnable()
         {
+            _rb.simulated = true;
+
             _characterAnimator.Reset();
             _stateMachine.Restart();
+            _health.Reset();
+            _knockback.Reset();
+
+            _health.Died += OnDied;
+        }
+
+        public void TakeDamage(DamageInfo info)
+        {
+            _health.TakeDamage(info);
+        }
+
+        private void OnDied()
+        {
+            _rb.simulated = false;
         }
 
         private void Update()
@@ -55,6 +88,8 @@ namespace Isometric2DGame.EnemyCharacter
         {
             _stateMachine.Stop();
             _motor.Reset();
+
+            _health.Died -= OnDied;
         }
 
         private void OnDrawGizmosSelected()
@@ -70,28 +105,37 @@ namespace Isometric2DGame.EnemyCharacter
 
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, _enemyConfig.Attack.Range);
+            Gizmos.color = Color.purple;
+            Gizmos.DrawWireSphere(transform.position, _enemyConfig.Attack.ExitRange);
         }
 
-        private StateMachine CreateStateMachine()
+        private StateMachine CreateStateMachine(SpeedScale chaseBoost)
         {
             var idle = new IdleEnemyState(_enemyConfig.Idle.HoldTime, _characterAnimator);
             var patrol = new PatrolEnemyState(this, _motor, _patrolRoute, _characterAnimator, _enemyConfig.Patrol);
-            var chase = new ChaseEnemyState(this, _motor, _sensor, _characterAnimator, _enemyConfig.Chase);
+            var chase = new ChaseEnemyState(this, _motor, _sensor, _characterAnimator, _enemyConfig.Chase, chaseBoost);
             var search = new SearchEnemyState(this, _sensor, _characterAnimator, _motor, _enemyConfig.Search);
             var attack = new AttackEnemyState(_enemyConfig.Attack, this, _sensor, _characterAnimator);
+            var hurt = new HurtEnemyState(_enemyConfig.Hurt, this, _characterAnimator, _health, _knockback);
+            var dead = new DeadEnemyState(_characterAnimator);
 
             var stateMachine = new StateMachine(idle);
 
             var detect = _enemyConfig.Detection.DetectRadius;
             var lose = _enemyConfig.Detection.LoseRadius;
 
+            stateMachine.AddAnyTransition(dead, () => !_health.Data.IsAlive);
+            stateMachine.AddAnyTransition(hurt, () => hurt.IsTriggered, canTransitionToSelf: true);
+            stateMachine.AddTransition(hurt, chase, () => hurt.IsDone && CanSee(lose));
+            stateMachine.AddTransition(hurt, idle, () => hurt.IsDone);
+
             stateMachine.AddTransition(idle, patrol, () => idle.IsDone);
             stateMachine.AddTransition(patrol, idle, () => patrol.IsArrived);
             stateMachine.AddTransition(idle, chase, () => CanSee(detect));
             stateMachine.AddTransition(patrol, chase, () => CanSee(detect));
             stateMachine.AddTransition(chase, attack, () => CanSee(_enemyConfig.Attack.Range));
-            stateMachine.AddTransition(attack, chase, 
-                () => !_sensor.HasLineOfSight || _sensor.Distance > _enemyConfig.Attack.ExitRange);
+            stateMachine.AddTransition(attack, chase,
+                () => !attack.Swinging && !CanSee(_enemyConfig.Attack.ExitRange));
             stateMachine.AddTransition(chase, search, () => !CanSee(lose));
             stateMachine.AddTransition(search, chase, () => CanSee(detect));
             stateMachine.AddTransition(search, idle, () => search.IsDone);

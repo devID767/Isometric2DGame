@@ -1,11 +1,11 @@
 using Isometric2DGame.Animations;
-using Isometric2DGame.Environment;
+using Isometric2DGame.EnemyCharacter.Patrol;
 using Isometric2DGame.Infrastructure;
 using Isometric2DGame.Movement;
 using Isometric2DGame.StateMachines;
 using UnityEngine;
 
-namespace Isometric2DGame.EnemyCharacter
+namespace Isometric2DGame.EnemyCharacter.States
 {
     public class PatrolEnemyState : ITickableState
     {
@@ -17,7 +17,7 @@ namespace Isometric2DGame.EnemyCharacter
         private readonly CharacterAnimator _animator;
         private readonly EnemyConfig.PatrolSettings _settings;
 
-        private readonly Timer _patrolPointTimer;
+        private readonly CooldownTimer _patrolPointTimer;
 
         public bool IsArrived { get; private set; }
 
@@ -31,7 +31,7 @@ namespace Isometric2DGame.EnemyCharacter
             _route = route;
             _settings = settings;
 
-            _patrolPointTimer = new Timer(_settings.PointTimeout);
+            _patrolPointTimer = new CooldownTimer(_settings.PointTimeout);
         }
 
         public void Enter()

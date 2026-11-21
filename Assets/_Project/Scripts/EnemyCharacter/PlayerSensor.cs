@@ -1,4 +1,5 @@
-using Isometric2DGame.Movement;
+using Isometric2DGame.Combat;
+using Isometric2DGame.Infrastructure;
 using UnityEngine;
 
 namespace Isometric2DGame.EnemyCharacter
@@ -13,10 +14,12 @@ namespace Isometric2DGame.EnemyCharacter
         private LayerMask _obstacleMask => _config.ObstackeMask;
 
         public bool HasTarget { get; private set; }
-        public Vector2 TargetPosition { get; private set; }
+        public ITarget Target { get; private set; }
         public float Distance { get; private set; }
         public bool HasLineOfSight { get; private set; }
         public Vector2 LastSeenPosition { get; private set; }
+
+        private Collider2D _lastCollider;
 
         public bool CanSee(float radius) => HasTarget && HasLineOfSight && Distance <= radius;
 
@@ -28,33 +31,44 @@ namespace Isometric2DGame.EnemyCharacter
 
         public void Refresh()
         {
-            HasTarget = IsPlayerNearby(_loseRadius, out Vector2 playerPosition);
-            TargetPosition = playerPosition;
-            if (!HasTarget)
+            var found = IsPlayerNearby(_loseRadius, out ITarget target);
+
+            HasTarget = found && target.Health.Data.IsAlive;
+
+            if (HasTarget)
+            {
+                Distance = Vector2.Distance(_positionHolder.Position, target.Position);
+                HasLineOfSight = !HasObstaclesOnLine(target.Position);
+                if (HasLineOfSight)
+                    LastSeenPosition = target.Position;
+            }
+            else
             {
                 Distance = float.PositiveInfinity;
                 HasLineOfSight = false;
             }
-            else
-            {
-                Distance = Vector2.Distance(_positionHolder.Position, playerPosition);
-                HasLineOfSight = !HasObstaclesOnLine(playerPosition);
-                if (HasLineOfSight)
-                    LastSeenPosition = playerPosition;
-            }
         }
 
-        private bool IsPlayerNearby(float radius, out Vector2 position)
+        private bool IsPlayerNearby(float radius, out ITarget target)
         {
             var playerCollider = Physics2D.OverlapCircle(_positionHolder.Position, radius, _playerMask);
+
             if (playerCollider != null)
             {
-                position = playerCollider.attachedRigidbody ?
-                    playerCollider.attachedRigidbody.position : playerCollider.transform.position;
-                return true;
-            }
+                if (playerCollider == _lastCollider)
+                {
+                    target = Target;
+                    return true;
+                }
 
-            position = Vector2.zero;
+                if (playerCollider.attachedRigidbody != null && playerCollider.attachedRigidbody.TryGetComponent(out target))
+                {
+                    _lastCollider = playerCollider;
+                    Target = target;
+                    return true;
+                }
+            }
+            target = null;
             return false;
         }
 

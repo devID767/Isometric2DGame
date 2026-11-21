@@ -7,6 +7,8 @@ namespace Isometric2DGame.MainCharacter
     {
         private readonly InputSystem_Actions _input;
 
+        public bool AttackPressed => _input.Player.Attack.WasPressedThisFrame();
+
         public PlayerInputReader()
         {
             _input = new InputSystem_Actions();

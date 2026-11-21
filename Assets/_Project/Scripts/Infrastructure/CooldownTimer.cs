@@ -1,0 +1,35 @@
+namespace Isometric2DGame.Infrastructure
+{
+    public class CooldownTimer
+    {
+        private readonly float _initTime;
+
+        private float _currentTime;
+
+        public bool IsDone => _currentTime <= 0;
+
+        public CooldownTimer(float time)
+        {
+            _initTime = time;
+            _currentTime = time;
+        }
+
+        public void Reset()
+        {
+            _currentTime = _initTime;
+        }
+
+        public void SetDone()
+        {
+            _currentTime = 0;
+        }
+
+        public void Tick(float deltaTime)
+        {
+            if (IsDone)
+                return;
+
+            _currentTime -= deltaTime;
+        }
+    }
+}
