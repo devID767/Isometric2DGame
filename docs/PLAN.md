@@ -15,8 +15,8 @@ Core tasks first, stretch goals only after all four are merged into `main`. Esti
 | Task 3 - Enemy AI | 5 h | ~4.5 h |
 | Task 4 - Combat | 5 h | ~9 h |
 | Polish and QA | 4 h | ~6.5 h |
-| Submission | 1 h | tbd |
-| **Total** | **25 h** | **~28 h** + submission |
+| Submission | 1 h | ~1 h |
+| **Total** | **25 h** | **~29 h** |
 
 Actual time comes from commit times and my work sessions, breaks removed.
 
