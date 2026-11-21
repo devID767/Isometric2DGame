@@ -13,7 +13,7 @@ namespace Isometric2DGame.EnemyCharacter.States
 
         private readonly IPositionHolder _self;
         private readonly CharacterMotor _motor;
-        private readonly PatrolRoute _route;
+        private readonly IPatrolRouteHolder _routeHolder;
         private readonly CharacterAnimator _animator;
         private readonly EnemyConfig.PatrolSettings _settings;
 
@@ -23,12 +23,12 @@ namespace Isometric2DGame.EnemyCharacter.States
 
         private Vector2 _point;
 
-        public PatrolEnemyState(IPositionHolder self, CharacterMotor motor, PatrolRoute route, CharacterAnimator animator, EnemyConfig.PatrolSettings settings)
+        public PatrolEnemyState(IPositionHolder self, CharacterMotor motor, IPatrolRouteHolder routeHolder, CharacterAnimator animator, EnemyConfig.PatrolSettings settings)
         {
             _self = self;
             _motor = motor;
             _animator = animator;
-            _route = route;
+            _routeHolder = routeHolder;
             _settings = settings;
 
             _patrolPointTimer = new CooldownTimer(_settings.PointTimeout);
@@ -36,7 +36,7 @@ namespace Isometric2DGame.EnemyCharacter.States
 
         public void Enter()
         {
-            IsArrived = !_route.TryGetNextPoint(_self.Position, out _point);
+            IsArrived = !_routeHolder.Value.TryGetNextPoint(_self.Position, out _point);
             _patrolPointTimer.Reset();
         }
 

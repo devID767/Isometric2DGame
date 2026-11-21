@@ -92,6 +92,13 @@ namespace Isometric2DGame.EnemyCharacter
             [field: SerializeField] public float PushSpeed { get; private set; } = 5f;
         }
 
+        [Serializable]
+        public class DeadSettings
+        {
+            [field: Min(0.01f)]
+            [field: SerializeField] public float CorpseTime { get; private set; } = 3f;
+        }
+
         [field: SerializeField] public DetectionSettings Detection { get; private set; } = new();
         [field: SerializeField] public IdleSettings Idle { get; private set; } = new();
         [field: SerializeField] public PatrolSettings Patrol { get; private set; } = new();
@@ -99,6 +106,7 @@ namespace Isometric2DGame.EnemyCharacter
         [field: SerializeField] public AttackSettings Attack { get; private set; } = new();
         [field: SerializeField] public SearchSettings Search { get; private set; } = new();
         [field: SerializeField] public HurtSettings Hurt { get; private set; } = new();
+        [field: SerializeField] public DeadSettings Dead { get; private set; } = new();
 
         [field: Space]
         [field: SerializeField] public HealthSettings Health { get; private set; } = new();
