@@ -1,6 +1,6 @@
 using System;
 
-namespace Isometric2DGame.Combat
+namespace Isometric2DGame.Combat.Healths
 {
     public interface IReadOnlyHealth
     {

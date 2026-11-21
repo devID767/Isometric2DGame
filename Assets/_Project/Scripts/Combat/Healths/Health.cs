@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Isometric2DGame.Combat
+namespace Isometric2DGame.Combat.Healths
 {
     public class Health : IReadOnlyHealth
     {

@@ -1,11 +1,11 @@
 using Isometric2DGame.Animations;
-using Isometric2DGame.Environment;
+using Isometric2DGame.EnemyCharacter.Patrol;
 using Isometric2DGame.Infrastructure;
 using Isometric2DGame.Movement;
 using Isometric2DGame.StateMachines;
 using UnityEngine;
 
-namespace Isometric2DGame.EnemyCharacter
+namespace Isometric2DGame.EnemyCharacter.States
 {
     public class PatrolEnemyState : ITickableState
     {

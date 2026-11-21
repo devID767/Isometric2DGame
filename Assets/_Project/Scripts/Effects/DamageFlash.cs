@@ -1,5 +1,6 @@
 using System;
 using Isometric2DGame.Combat;
+using Isometric2DGame.Combat.Healths;
 using UnityEngine;
 
 namespace Isometric2DGame.Effects

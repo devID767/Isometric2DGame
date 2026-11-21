@@ -2,9 +2,8 @@ using Isometric2DGame.Animations;
 using Isometric2DGame.Infrastructure;
 using Isometric2DGame.StateMachines;
 
-namespace Isometric2DGame.EnemyCharacter
+namespace Isometric2DGame.EnemyCharacter.States
 {
-
     public class IdleEnemyState : ITickableState
     {
         private readonly CooldownTimer _timer;

@@ -1,6 +1,6 @@
 using Isometric2DGame.Combat;
 using Isometric2DGame.Infrastructure;
-using Isometric2DGame.Movement;
+using Isometric2DGame.Movement.Modifiers;
 using UnityEngine;
 
 namespace Isometric2DGame.MainCharacter

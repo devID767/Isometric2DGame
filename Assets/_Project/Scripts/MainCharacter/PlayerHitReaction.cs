@@ -1,7 +1,8 @@
 using Isometric2DGame.Animations;
 using Isometric2DGame.Combat;
+using Isometric2DGame.Combat.Healths;
 using Isometric2DGame.Infrastructure;
-using Isometric2DGame.Movement;
+using Isometric2DGame.Movement.Modifiers;
 
 namespace Isometric2DGame.MainCharacter
 {

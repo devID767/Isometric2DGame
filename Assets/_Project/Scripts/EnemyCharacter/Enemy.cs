@@ -1,7 +1,10 @@
 using Isometric2DGame.Animations;
 using Isometric2DGame.Combat;
-using Isometric2DGame.Environment;
+using Isometric2DGame.Combat.Healths;
+using Isometric2DGame.EnemyCharacter.Patrol;
+using Isometric2DGame.EnemyCharacter.States;
 using Isometric2DGame.Movement;
+using Isometric2DGame.Movement.Modifiers;
 using Isometric2DGame.StateMachines;
 using UnityEngine;
 

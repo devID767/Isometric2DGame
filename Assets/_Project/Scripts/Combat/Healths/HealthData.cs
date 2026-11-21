@@ -1,4 +1,4 @@
-namespace Isometric2DGame.Combat
+namespace Isometric2DGame.Combat.Healths
 {
     public readonly struct HealthData
     {

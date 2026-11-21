@@ -19,9 +19,9 @@ namespace Isometric2DGame.Infrastructure
             return _pool.Get();
         }
 
-        public void Release(T projectile)
+        public void Release(T item)
         {
-            _pool.Release(projectile);
+            _pool.Release(item);
         }
 
         private T Create()

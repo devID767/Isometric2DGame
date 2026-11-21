@@ -1,4 +1,4 @@
-using Isometric2DGame.Combat;
+using Isometric2DGame.Combat.Healths;
 using UnityEngine;
 using UnityEngine.UI;
 

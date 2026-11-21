@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Isometric2DGame.Movement.Modifiers;
 using UnityEngine;
 
 namespace Isometric2DGame.Movement

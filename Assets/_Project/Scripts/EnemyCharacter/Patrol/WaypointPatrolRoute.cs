@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Isometric2DGame.Environment
+namespace Isometric2DGame.EnemyCharacter.Patrol
 {
     public class WaypointPatrolRoute : PatrolRoute
     {

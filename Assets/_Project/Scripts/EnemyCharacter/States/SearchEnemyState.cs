@@ -4,7 +4,7 @@ using Isometric2DGame.Movement;
 using Isometric2DGame.StateMachines;
 using UnityEngine;
 
-namespace Isometric2DGame.EnemyCharacter
+namespace Isometric2DGame.EnemyCharacter.States
 {
     public class SearchEnemyState : ITickableState
     {
