@@ -45,22 +45,22 @@ namespace Isometric2DGame.EnemyCharacter.Spawner
         {
             for (int i = 0; i < _config.InitialCount; i++)
             {
-                TryGetRandomPoint(out EnemySpawnPoint point);
-                Spawn(point);
+                if (TryGetRandomPoint(out EnemySpawnPoint point))
+                    Spawn(point);
             }
         }
 
         private bool TryGetRandomPoint(out EnemySpawnPoint result)
         {
             result = default;
-            
+
             _candidates.Clear();
             foreach (var point in _spawnPoints)
                 if ((point.Position - _playerPosition.Position).sqrMagnitude > _config.MinDistanceToPlayer * _config.MinDistanceToPlayer)
                     _candidates.Add(point);
 
             if (_candidates.Count == 0)
-                 return false;
+                return false;
 
             result = _candidates[UnityEngine.Random.Range(0, _candidates.Count)];
             return true;
