@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Isometric2DGame.Infrastructure
@@ -7,16 +8,21 @@ namespace Isometric2DGame.Infrastructure
         private readonly UnityEngine.Pool.ObjectPool<T> _pool;
         private readonly T _prefab;
 
+        public int CountActive => _pool.CountActive;
+
         public ComponentPool(T prefab)
         {
             _prefab = prefab;
 
-            _pool = new UnityEngine.Pool.ObjectPool<T>(Create, OnGet, OnRelease, OnDestroyAction);
+            _pool = new UnityEngine.Pool.ObjectPool<T>(Create, null, OnRelease, OnDestroyAction);
         }
 
-        public T Get()
+        public T Get(Action<T> setup = null)
         {
-            return _pool.Get();
+            var item = _pool.Get();
+            setup?.Invoke(item);
+            item.gameObject.SetActive(true);
+            return item;
         }
 
         public void Release(T item)
@@ -26,12 +32,9 @@ namespace Isometric2DGame.Infrastructure
 
         private T Create()
         {
-            return Object.Instantiate(_prefab);
-        }
-
-        private void OnGet(T item)
-        {
-            item.gameObject.SetActive(true);
+            var item = UnityEngine.Object.Instantiate(_prefab);
+            item.gameObject.SetActive(false);
+            return item;
         }
 
         private void OnRelease(T item)
@@ -41,7 +44,7 @@ namespace Isometric2DGame.Infrastructure
 
         private void OnDestroyAction(T item)
         {
-            Object.Destroy(item.gameObject);
+            UnityEngine.Object.Destroy(item.gameObject);
         }
     }
 }

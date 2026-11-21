@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87372fdd1c3104eca8d8d4776c6ed16c, type: 3}
   m_Name: PlayerCombatConfig
   m_EditorClassIdentifier: Assembly-CSharp::Isometric2DGame.MainCharacter.PlayerCombatConfig
-  <MaxHP>k__BackingField: 5
+  <MaxHP>k__BackingField: 10
   <Attack>k__BackingField:
-    <Damage>k__BackingField: 1
+    <Damage>k__BackingField: 3
     <MoveSpeedScale>k__BackingField: 0.5
-    <Offset>k__BackingField: 0.3
-    <Radius>k__BackingField: 0.25
+    <Offset>k__BackingField: 0.1
+    <Radius>k__BackingField: 0.35
     <Swing>k__BackingField:
       <HitDelay>k__BackingField: 0.15
       <Cooldown>k__BackingField: 0.5

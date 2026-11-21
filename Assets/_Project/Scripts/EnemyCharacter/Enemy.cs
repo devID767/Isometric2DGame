@@ -1,3 +1,4 @@
+using System;
 using Isometric2DGame.Animations;
 using Isometric2DGame.Combat;
 using Isometric2DGame.Combat.Healths;
@@ -11,9 +12,10 @@ using UnityEngine;
 namespace Isometric2DGame.EnemyCharacter
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Enemy : MonoBehaviour, ITarget
+    public class Enemy : MonoBehaviour, ITarget, IPatrolRouteHolder
     {
         [SerializeField] private PatrolRoute _patrolRoute;
+
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private Animator _animator;
         [SerializeField] private CharacterMoveConfig _moveConfig;
@@ -32,6 +34,10 @@ namespace Isometric2DGame.EnemyCharacter
 
         public IReadOnlyHealth Health => _health;
 
+        PatrolRoute IPatrolRouteHolder.Value => _patrolRoute;
+
+        public event Action<Enemy> CorpseExpired;
+
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
@@ -49,6 +55,11 @@ namespace Isometric2DGame.EnemyCharacter
 
             _characterAnimator.SetDuration(CharacterAction.Hurt, _enemyConfig.Hurt.Duration);
             _characterAnimator.SetDuration(CharacterAction.Attack, _enemyConfig.Attack.Swing.Duration);
+        }
+
+        public void SetupRoute(PatrolRoute patrolRoute)
+        {
+            _patrolRoute = patrolRoute;
         }
 
         private void OnEnable()
@@ -112,12 +123,12 @@ namespace Isometric2DGame.EnemyCharacter
         private StateMachine CreateStateMachine(SpeedScale chaseBoost)
         {
             var idle = new IdleEnemyState(_enemyConfig.Idle.HoldTime, _characterAnimator);
-            var patrol = new PatrolEnemyState(this, _motor, _patrolRoute, _characterAnimator, _enemyConfig.Patrol);
+            var patrol = new PatrolEnemyState(this, _motor, this, _characterAnimator, _enemyConfig.Patrol);
             var chase = new ChaseEnemyState(this, _motor, _sensor, _characterAnimator, _enemyConfig.Chase, chaseBoost);
             var search = new SearchEnemyState(this, _sensor, _characterAnimator, _motor, _enemyConfig.Search);
             var attack = new AttackEnemyState(_enemyConfig.Attack, this, _sensor, _characterAnimator);
             var hurt = new HurtEnemyState(_enemyConfig.Hurt, this, _characterAnimator, _health, _knockback);
-            var dead = new DeadEnemyState(_characterAnimator);
+            var dead = new DeadEnemyState(_enemyConfig.Dead, _characterAnimator, OnCorpseExpired);
 
             var stateMachine = new StateMachine(idle);
 
@@ -143,6 +154,11 @@ namespace Isometric2DGame.EnemyCharacter
             bool CanSee(float radius) => _sensor.CanSee(radius);
 
             return stateMachine;
+        }
+
+        private void OnCorpseExpired()
+        {
+            CorpseExpired?.Invoke(this);
         }
     }
 }
