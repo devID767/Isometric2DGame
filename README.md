@@ -62,7 +62,7 @@ Assets/_Project/Scripts/
 All decisions with reasons: [docs/PLAN.md](docs/PLAN.md#decisions).
 
 ## Estimate vs actual
-About 28 hours against 25, submission not counted yet. Combat took about 9 hours instead of 5: it had the longest list of the four tasks and the same estimate as the enemy AI. Details in [docs/PLAN.md](docs/PLAN.md#estimates).
+About 29 hours against an estimate of 25. Combat took about 9 hours instead of 5: it had the longest list of the four tasks and the same estimate as the enemy AI. Details in [docs/PLAN.md](docs/PLAN.md#estimates).
 
 ## Assets
 - [Voxel Dungeon Pack](https://colefoster.itch.io/voxel-dungeon-pack), [Voxel Crypt Pack](https://colefoster.itch.io/voxel-crypt-pack) and [Hearthmark: Pixel RPG UI](https://colefoster.itch.io/hearthmark-rpg-ui) by Cole Foster, CC0 1.0. Licenses are in `Assets/_Project/Art/ThirdParty/ColeFoster/`. According to the pack README, the sprites are rendered by a generator whose code was written with AI coding agents; no image-generation model was used.
